@@ -549,13 +549,13 @@ function createCarCard(car, isAdmin, showEdit = false) {
             <div class="mb-4">
                 <h3 class="text-xl font-bold text-gray-900 mb-1">${car.make} ${car.model}</h3>
                 <p class="text-gray-600">${car.year}</p>
-                <div class="text-2xl font-bold text-red-600 mt-2">$${car.price.toLocaleString()}</div>
+                <div class="text-2xl font-bold text-red-600 mt-2"> JP¥ ${car.price.toLocaleString()}</div>
             </div>
             
             <div class="grid grid-cols-2 gap-3 text-sm mb-4">
                 <div class="flex items-center text-gray-600">
                     <span class="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>
-                    <span>${car.mileage.toLocaleString()} miles</span>
+                    <span>${car.mileage.toLocaleString()} km</span>
                 </div>
                 <div class="flex items-center text-gray-600">
                     <span class="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
@@ -633,7 +633,7 @@ function showCarDetails(carId) {
                         ${car.status.toUpperCase()}
                     </span>
                 </div>
-                <div class="text-3xl font-bold text-red-600 mt-2">$${car.price.toLocaleString()}</div>
+                <div class="text-3xl font-bold text-red-600 mt-2"> JP¥ ${car.price.toLocaleString()}</div>
             </div>
             
             <div class="mb-6">
@@ -654,7 +654,7 @@ function showCarDetails(carId) {
                 <div class="bg-gray-50 rounded-lg p-4">
                     <h4 class="text-lg font-semibold text-gray-900 mb-3">Basic Information</h4>
                     <div class="space-y-2 text-sm">
-                        <div class="flex justify-between"><span class="text-gray-600">Mileage:</span><span class="font-medium">${car.mileage.toLocaleString()} miles</span></div>
+                        <div class="flex justify-between"><span class="text-gray-600">Mileage:</span><span class="font-medium">${car.mileage.toLocaleString()} km</span></div>
                         <div class="flex justify-between"><span class="text-gray-600">Fuel Type:</span><span class="font-medium">${car.fuel_type}</span></div>
                         <div class="flex justify-between"><span class="text-gray-600">Color:</span><span class="font-medium">${car.color}</span></div>
                         <div class="flex justify-between"><span class="text-gray-600">Transmission:</span><span class="font-medium">${car.transmission}</span></div>
@@ -708,190 +708,13 @@ function showCarDetails(carId) {
 }
 
 // Show customer car details with purchase and shipping info
+// Redirect to car details page instead of showing modal
+// Redirect to car details page using URL parameters
 function showCustomerCarDetails(carId, purchaseId) {
-    console.log(`Showing customer car details for car ID: ${carId}, purchase ID: ${purchaseId}`);
-    const car = cars.find(c => c.id === carId);
-    const purchase = purchases.find(p => p.id === purchaseId);
-    if (!car || !purchase) return;
+    console.log(`Redirecting to car details page for car ID: ${carId}, purchase ID: ${purchaseId}`);
     
-    const modal = document.getElementById('car-details-modal');
-    const content = document.getElementById('car-details-content');
-    const placeholderImage = 'https://placehold.co/600x400/dc2626/white?text=Your+Car';
-    let activeImage = car.images && car.images.length > 0 ? car.images[0] : placeholderImage;
-    
-    const shippingInfo = purchase.shipping_info || {};
-    
-    content.innerHTML = `
-            <div class="max-w-7xl w-full">
-
-            <!-- Header -->
-            <div class="bg-gradient-to-r from-primary to-secondary text-white p-6 rounded-t-lg mb-6">
-                <div class="flex justify-between items-center">
-                    <div>
-                        <h3 class="text-3xl font-bold mb-2">${car.make} ${car.model}</h3>
-                        <p class="text-red-100">Vehicle Details & Shipping Information</p>
-                    </div>
-                    
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
-                <!-- Left Side - Images -->
-                <div>
-                    <div class="mb-4">
-                        <img src="${activeImage}" alt="${car.make} ${car.model}" class="w-full h-80 object-cover rounded-lg shadow-lg" id="main-car-image">
-                    </div>
-                    
-                    ${car.images && car.images.length > 0 ? `
-                        <div class="grid grid-cols-6 gap-2">
-                            ${car.images.map((img, index) => `
-                                <img src="${img || placeholderImage}" 
-                                     alt="${car.make} ${car.model}" 
-                                     class="w-full h-16 object-cover rounded cursor-pointer border-2 transition-colors ${index === 0 ? 'border-primary' : 'border-gray-200 hover:border-primary'}" 
-                                     onclick="switchMainImage('${img || placeholderImage}', this)">
-                            `).join('')}
-                        </div>
-                    ` : ''}
-                </div>
-
-                <!-- Right Side - Details -->
-                <div class="space-y-6">
-                    <!-- Payment Section -->
-                    <div class="bg-green-50 border border-green-200 rounded-lg overflow-hidden">
-                        <div class="bg-green-600 text-white px-4 py-2">
-                            <h4 class="font-bold">Payment</h4>
-                        </div>
-                        <div class="p-4">
-                            <table class="w-full text-sm">
-                                <tr class="border-b">
-                                    <td class="py-2 font-medium">Vehicle Price</td>
-                                    <td class="py-2 text-center">Paid</td>
-                                    <td class="py-2 text-center">Vehicle Balance</td>
-                                </tr>
-                                <tr>
-                                    <td class="py-2 font-bold text-green-700">$${car.price.toLocaleString()}</td>
-                                    <td class="py-2 text-center font-bold text-green-700">$${car.price.toLocaleString()}</td>
-                                    <td class="py-2 text-center font-bold text-red-600">$0</td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-
-                    <!-- Shipping Information -->
-                    <div class="bg-blue-50 border border-blue-200 rounded-lg overflow-hidden">
-                        <div class="bg-blue-600 text-white px-4 py-2">
-                            <h4 class="font-bold">Shipping Information</h4>
-                        </div>
-                        <div class="p-4">
-                            <table class="w-full text-sm">
-                                <tr class="border-b">
-                                    <td class="py-2 font-medium w-1/3">From Port</td>
-                                    <td class="py-2">${shippingInfo.from_port || 'N/A'}</td>
-                                    <td class="py-2 font-medium w-1/3">Arrival Port</td>
-                                    <td class="py-2">${shippingInfo.arrival_port || 'N/A'}</td>
-                                </tr>
-                                <tr class="border-b">
-                                    <td class="py-2 font-medium">Departure Date</td>
-                                    <td class="py-2">${shippingInfo.departure_date ? new Date(shippingInfo.departure_date).toLocaleDateString() : 'N/A'}</td>
-                                    <td class="py-2 font-medium">Arrival Date</td>
-                                    <td class="py-2">${shippingInfo.arrival_date ? new Date(shippingInfo.arrival_date).toLocaleDateString() : 'N/A'}</td>
-                                </tr>
-                                <tr class="border-b">
-                                    <td class="py-2 font-medium">Consignee</td>
-                                    <td class="py-2 col-span-3">${shippingInfo.consignee || currentCustomer.name}</td>
-                                </tr>
-                                <tr class="border-b">
-                                    <td class="py-2 font-medium">Consignee Address</td>
-                                    <td class="py-2 col-span-3">${shippingInfo.consignee_address || currentCustomer.address}</td>
-                                </tr>
-                                <tr class="border-b">
-                                    <td class="py-2 font-medium">Consignee TEL</td>
-                                    <td class="py-2">${currentCustomer.phone || 'N/A'}</td>
-                                </tr>
-                                <tr>
-                                    <td class="py-2 font-medium">Notify</td>
-                                    <td class="py-2">${shippingInfo.notify_address || 'SAME AS CONSIGNEE'}</td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-
-                    <!-- Car Specifications -->
-                    <div class="bg-red-50 border border-red-200 rounded-lg overflow-hidden">
-                        <div class="bg-red-600 text-white px-4 py-2">
-                            <h4 class="font-bold">Car Specs</h4>
-                        </div>
-                        <div class="p-4">
-                            <table class="w-full text-sm">
-                                <tr class="border-b">
-                                    <td class="py-2 font-medium w-1/3">Rec No</td>
-                                    <td class="py-2">${car.id}</td>
-                                    <td class="py-2 font-medium w-1/3">Shift</td>
-                                    <td class="py-2">${car.transmission}</td>
-                                </tr>
-                                <tr class="border-b">
-                                    <td class="py-2 font-medium">Grade</td>
-                                    <td class="py-2">Luxury</td>
-                                    <td class="py-2 font-medium">Seats</td>
-                                    <td class="py-2">${car.seats}</td>
-                                </tr>
-                                <tr class="border-b">
-                                    <td class="py-2 font-medium">Chassis</td>
-                                    <td class="py-2 font-mono text-xs">${car.vin}</td>
-                                </tr>
-                                <tr class="border-b">
-                                    <td class="py-2 font-medium">Mileage</td>
-                                    <td class="py-2">${car.mileage.toLocaleString()}</td>
-                                    <td class="py-2 font-medium">Fuel</td>
-                                    <td class="py-2">${car.fuel_type}</td>
-                                </tr>
-                                <tr class="border-b">
-                                    <td class="py-2 font-medium">Color</td>
-                                    <td class="py-2">${car.color}</td>
-                                    <td class="py-2 font-medium">Doors</td>
-                                    <td class="py-2">${car.doors}</td>
-                                </tr>
-                                <tr class="border-b">
-                                    <td class="py-2 font-medium">Engine CC</td>
-                                    <td class="py-2">${car.engine_cc}</td>
-                                    <td class="py-2 font-medium">Lecture Year</td>
-                                    <td class="py-2">${car.year}</td>
-                                </tr>
-                                <tr>
-                                    <td class="py-2 font-medium">Registration Year</td>
-                                    <td class="py-2">${car.registration_year}</td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-
-                    <!-- Additional Options -->
-                    <div class="bg-yellow-50 border border-yellow-200 rounded-lg overflow-hidden">
-                        <div class="bg-yellow-600 text-white px-4 py-2">
-                            <h4 class="font-bold">Options</h4>
-                        </div>
-                        <div class="p-4">
-                            <p class="text-sm text-gray-600">Purchase Date: <span class="font-medium">${new Date(purchase.purchase_date).toLocaleDateString()}</span></p>
-                            <p class="text-sm text-gray-600">Order ID: <span class="font-medium">#${purchase.id}</span></p>
-                            <p class="text-sm text-gray-600">Status: <span class="font-medium text-green-600">${purchase.status.toUpperCase()}</span></p>
-                        </div>
-                    </div>
-                    <!-- Additional Details -->
-${car.additional_details ? `
-    <div class="bg-purple-50 border border-purple-200 rounded-lg overflow-hidden">
-        <div class="bg-purple-600 text-white px-4 py-2">
-            <h4 class="font-bold">Additional Details</h4>
-        </div>
-        <div class="p-4">
-            <p class="text-sm text-gray-700 whitespace-pre-wrap">${car.additional_details}</p>
-        </div>
-    </div>
-` : ''}
-                </div>
-            </div>
-        </div>
-    `;
-    if (modal) modal.style.display = 'block';
+    // Simply pass the IDs via URL - the details page will fetch the data
+    window.location.href = `car-details.html?carId=${carId}&purchaseId=${purchaseId}`;
 }
 
 
@@ -910,29 +733,53 @@ function switchMainImage(imageSrc, thumbnailElement) {
 }
 
 // Download car image
-function downloadCarImage(imageSrc, carName) {
-    if (imageSrc.startsWith('data:')) {
-        // For base64 images
+function downloadCarImage() {
+    const mainImage = document.getElementById('main-image');
+    const carTitle = document.getElementById('car-title').textContent;
+    
+    if (mainImage.src.startsWith('data:')) {
+        // For base64 images (from your database)
         const link = document.createElement('a');
-        link.href = imageSrc;
-        link.download = `${carName}_image.jpg`;
+        link.href = mainImage.src;
+        link.download = `${carTitle.replace(/\s+/g, '_')}_image.jpg`;
+        document.body.appendChild(link);
         link.click();
+        document.body.removeChild(link);
+    } else if (mainImage.src.includes('placehold.co')) {
+        // For placeholder images
+        alert('No image available to download');
     } else {
-        // For URL images
-        fetch(imageSrc)
+        // For URL-based images
+        fetch(mainImage.src)
             .then(response => response.blob())
             .then(blob => {
                 const link = document.createElement('a');
                 link.href = URL.createObjectURL(blob);
-                link.download = `${carName}_image.jpg`;
+                link.download = `${carTitle.replace(/\s+/g, '_')}_image.jpg`;
+                document.body.appendChild(link);
                 link.click();
+                document.body.removeChild(link);
                 URL.revokeObjectURL(link.href);
             })
             .catch(error => {
                 console.error('Error downloading image:', error);
-                showNotification('Failed to download image', 'error');
+                alert('Failed to download image');
             });
     }
+}
+
+function printPage() {
+    // Hide all navigation and action buttons before printing
+    const noPrintElements = document.querySelectorAll('.no-print');
+    noPrintElements.forEach(el => el.style.display = 'none');
+    
+    // Print the page
+    window.print();
+    
+    // Show the elements again after printing
+    setTimeout(() => {
+        noPrintElements.forEach(el => el.style.display = '');
+    }, 1000);
 }
 
 // Close car details modal
@@ -1224,11 +1071,11 @@ function createCustomerCarCard(car, purchase) {
                 <div class="text-sm space-y-1">
                     <div class="flex justify-between text-green-700">
                         <span>Vehicle Price:</span>
-                        <span class="font-semibold">$${car.price.toLocaleString()} (Paid)</span>
+                        <span class="font-semibold"> JP¥ ${car.price.toLocaleString()} (Paid)</span>
                     </div>
                     <div class="flex justify-between text-green-700">
                         <span>Balance:</span>
-                        <span class="font-semibold">$0</span>
+                        <span class="font-semibold"> JP¥ 0</span>
                     </div>
                 </div>
             </div>
@@ -1383,7 +1230,7 @@ async function loadPurchaseHistory() {
                                     <p class="text-gray-600">${car.year}</p>
                                 </div>
                                 <div class="text-right">
-                                    <div class="text-2xl font-bold text-primary">$${purchase.purchase_price.toLocaleString()}</div>
+                                    <div class="text-2xl font-bold text-primary"> JP¥ ${purchase.purchase_price.toLocaleString()}</div>
                                     <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800">
                                         ${purchase.status.toUpperCase()}
                                     </span>
