@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Dealer Portal - Customer Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#dc2626',
+                        secondary: '#991b1b',
+                        accent: '#fef2f2'
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-in-out',
+                        'float': 'float 3s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .panel { display: none; }
+        .panel.active { display: block; animation: fadeIn 0.5s ease-in-out; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .car-image { width: 100%; height: 200px; object-fit: cover; border-radius: 10px; margin-bottom: 15px; }
+        .thumbnail { width: 60px; height: 40px; object-fit: cover; border-radius: 5px; cursor: pointer; margin-right: 8px; margin-bottom: 8px; }
+        .thumbnail.active { border: 2px solid #dc2626; }
+        .notification { position: fixed; top: 20px; right: 20px; padding: 15px 20px; border-radius: 10px; color: white; font-weight: 600; z-index: 1001; opacity: 0; transform: translateX(100%); transition: all 0.3s ease; }
+        .notification.show { opacity: 1; transform: translateX(0); }
+        .notification.success { background: #28a745; }
+        .notification.error { background: #dc3545; }
+        .notification.info { background: #17a2b8; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); z-index: 1000; }
+        .modal-content { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 30px; border-radius: 20px; max-width: 800px; width: 90%; max-height: 90vh; overflow-y: auto; }
+        .close { float: right; font-size: 28px; font-weight: bold; cursor: pointer; color: #aaa; }
+        .close:hover { color: #000; }
+        @media print {
+    body * { visibility: hidden; }
+    #car-details-modal, #car-details-modal * { visibility: visible; }
+    #car-details-modal { position: static !important; }
+    .modal { background: white !important; }
+    .close { display: none !important; }
+}
+    </style>
+</head>
+
+<body class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+    <!-- Header -->
+    <div class="bg-gradient-to-r from-primary to-secondary text-white py-8 mb-8">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h1 class="text-4xl font-bold mb-2">🚗 Car Dealer Portal</h1>
+                    <p class="text-red-100">Customer Dashboard - Your automotive journey</p>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span id="customer-welcome" class="text-red-100">Welcome!</span>
+                    <button onclick="logout()" class="bg-white text-primary px-6 py-2 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+                        Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Customer Panel -->
+    <div id="customer-panel" class="panel active max-w-7xl mx-auto px-4">
+        <!-- Customer Info Card -->
+        <div class="bg-white rounded-xl shadow-lg p-6 mb-8 border-l-4 border-primary">
+            <div class="flex items-center">
+                <div class="w-16 h-16 bg-gradient-to-r from-primary to-secondary rounded-full flex items-center justify-center text-white font-bold text-xl mr-4">
+                    <span id="customer-initial">C</span>
+                </div>
+                <div>
+                    <h3 id="customer-name" class="text-2xl font-bold text-gray-900">Customer Dashboard</h3>
+                    <p id="customer-email" class="text-gray-600"></p>
+                    <div class="flex items-center mt-2">
+                        <span class="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+                        <span class="text-sm text-green-600 font-medium">Active Customer</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="bg-white rounded-lg shadow-lg mb-8">
+            <div class="flex border-b overflow-x-auto">
+                <button class="tab flex-1 py-4 px-6 text-center font-semibold text-primary border-b-2 border-primary bg-accent whitespace-nowrap" onclick="showTab('my-cars')">
+                    My Cars
+                </button>
+                <button class="tab flex-1 py-4 px-6 text-center font-semibold text-gray-600 hover:text-primary transition-colors whitespace-nowrap" onclick="showTab('purchase-history')">
+                    Purchase History
+                </button>
+                <button class="tab flex-1 py-4 px-6 text-center font-semibold text-gray-600 hover:text-primary transition-colors whitespace-nowrap" onclick="showTab('available-cars')">
+                    Available Cars
+                </button>
+            </div>
+
+            <!-- My Cars Tab -->
+            <div id="my-cars" class="tab-content active p-8">
+                <div class="mb-6">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-2">My Vehicle Collection</h2>
+                    <p class="text-gray-600">Manage and track your purchased vehicles</p>
+                </div>
+                <div id="customer-cars-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+            </div>
+
+            <!-- Purchase History Tab -->
+            <div id="purchase-history" class="tab-content p-8">
+                <div class="mb-6">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-2">Purchase History</h2>
+                    <p class="text-gray-600">Complete record of your vehicle purchases</p>
+                </div>
+                <div id="purchase-history-list" class="space-y-6"></div>
+            </div>
+
+            <!-- Available Cars Tab -->
+            <div id="available-cars" class="tab-content p-8">
+                <div class="mb-6">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-2">Available Vehicles</h2>
+                    <p class="text-gray-600">Browse our premium collection of vehicles</p>
+                </div>
+                <div id="available-cars-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Car Details Modal -->
+    <div id="car-details-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeCarDetailsModal()">×</span>
+            <div id="car-details-content"></div>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div id="notification" class="notification"></div>
+
+    <script src="script.js"></script>
+    <script>
+        // Tab switching functionality for customer panel
+        function showTab(tabName) {
+            // Remove active class from all tabs and tab contents
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('text-primary', 'border-b-2', 'border-primary', 'bg-accent');
+                tab.classList.add('text-gray-600');
+            });
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Add active class to clicked tab
+            event.target.classList.remove('text-gray-600');
+            event.target.classList.add('text-primary', 'border-b-2', 'border-primary', 'bg-accent');
+            
+            // Show corresponding tab content
+            document.getElementById(tabName).classList.add('active');
+        }
+
+        // Initialize customer initial when customer name is loaded
+        function updateCustomerInitial() {
+            const customerName = document.getElementById('customer-name').textContent;
+            const initial = customerName.charAt(0).toUpperCase();
+            document.getElementById('customer-initial').textContent = initial;
+        }
+
+        // Override the original showAuthenticatedPanel to include initial update
+        const originalShowAuthenticatedPanel = window.showAuthenticatedPanel;
+        if (originalShowAuthenticatedPanel) {
+            window.showAuthenticatedPanel = function() {
+                originalShowAuthenticatedPanel.apply(this, arguments);
+                setTimeout(updateCustomerInitial, 100);
+            };
+        }
+    </script>
+</body>
+</html>
