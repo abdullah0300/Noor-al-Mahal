@@ -256,23 +256,24 @@ async function fileToBase64(file) {
 async function handleAddCar(e) {
     e.preventDefault();
     console.log('Handling add car'); // Debug log
-    const carData = {
-        make: document.getElementById('make').value,
-        model: document.getElementById('model').value,
-        year: parseInt(document.getElementById('year').value),
-        price: parseFloat(document.getElementById('price').value),
-        mileage: parseInt(document.getElementById('mileage').value),
-        fuel_type: document.getElementById('fuel_type').value,
-        color: document.getElementById('color').value,
-        transmission: document.getElementById('transmission').value,
-        engine_cc: parseInt(document.getElementById('engine_cc').value),
-        doors: parseInt(document.getElementById('doors').value),
-        seats: parseInt(document.getElementById('seats').value),
-        registration_year: parseInt(document.getElementById('registration_year').value),
-        vin: document.getElementById('vin').value,
-        status: 'available',
-        images: []
-    };
+   const carData = {
+    make: document.getElementById('make').value,
+    model: document.getElementById('model').value,
+    year: parseInt(document.getElementById('year').value),
+    price: parseFloat(document.getElementById('price').value),
+    mileage: parseInt(document.getElementById('mileage').value),
+    fuel_type: document.getElementById('fuel_type').value,
+    color: document.getElementById('color').value,
+    transmission: document.getElementById('transmission').value,
+    engine_cc: parseInt(document.getElementById('engine_cc').value),
+    doors: parseInt(document.getElementById('doors').value),
+    seats: parseInt(document.getElementById('seats').value),
+    registration_year: parseInt(document.getElementById('registration_year').value),
+    vin: document.getElementById('vin').value,
+    additional_details: document.getElementById('additional_details').value || '',
+    status: 'available',
+    images: []
+};
 
     // Check for duplicate VIN
     try {
@@ -430,6 +431,7 @@ async function handleEditCar(e) {
         seats: parseInt(document.getElementById('edit-seats').value),
         registration_year: parseInt(document.getElementById('edit-registration_year').value),
         vin: document.getElementById('edit-vin').value,
+            additional_details: document.getElementById('edit-additional_details').value || '', // ADD THIS LINE
         images: existingCar.images || []
     };
 
@@ -694,6 +696,12 @@ function showCarDetails(carId) {
                     </div>
                 </div>
             ` : ''}
+            ${car.additional_details ? `
+    <div class="bg-yellow-50 rounded-lg p-4 mb-6">
+        <h4 class="text-lg font-semibold text-gray-900 mb-3">Additional Details</h4>
+        <p class="text-sm text-gray-700 whitespace-pre-wrap">${car.additional_details}</p>
+    </div>
+` : ''}
         </div>
     `;
     if (modal) modal.style.display = 'block';
@@ -723,14 +731,7 @@ function showCustomerCarDetails(carId, purchaseId) {
                         <h3 class="text-3xl font-bold mb-2">${car.make} ${car.model}</h3>
                         <p class="text-red-100">Vehicle Details & Shipping Information</p>
                     </div>
-                    <div class="text-right">
-                        <button onclick="window.print()" class="bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-4 py-2 rounded-lg font-medium transition-colors">
-                            📄 Print Page
-                        </button>
-                        <button onclick="downloadCarImage('${activeImage}', '${car.make}_${car.model}')" class="bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-4 py-2 rounded-lg font-medium transition-colors ml-2">
-                            📥 Download Picture
-                        </button>
-                    </div>
+                    
                 </div>
             </div>
 
@@ -875,6 +876,17 @@ function showCustomerCarDetails(carId, purchaseId) {
                             <p class="text-sm text-gray-600">Status: <span class="font-medium text-green-600">${purchase.status.toUpperCase()}</span></p>
                         </div>
                     </div>
+                    <!-- Additional Details -->
+${car.additional_details ? `
+    <div class="bg-purple-50 border border-purple-200 rounded-lg overflow-hidden">
+        <div class="bg-purple-600 text-white px-4 py-2">
+            <h4 class="font-bold">Additional Details</h4>
+        </div>
+        <div class="p-4">
+            <p class="text-sm text-gray-700 whitespace-pre-wrap">${car.additional_details}</p>
+        </div>
+    </div>
+` : ''}
                 </div>
             </div>
         </div>
@@ -1361,7 +1373,7 @@ async function loadPurchaseHistory() {
                 purchaseItem.innerHTML = `
                     <div class="flex flex-col md:flex-row">
                         <div class="md:w-48 h-48 md:h-auto">
-                            <img src="${mainImage}" alt="${car.make} ${car.model}" class="w-full h-full object-cover">
+                            <img src="${mainImage}" alt="${car.make} ${car.model}" class="w-full h-full object-contain">
                         </div>
                         
                         <div class="flex-1 p-6">
@@ -1483,6 +1495,7 @@ function showEditModal(carId) {
     document.getElementById('edit-seats').value = car.seats;
     document.getElementById('edit-registration_year').value = car.registration_year;
     document.getElementById('edit-vin').value = car.vin;
+    document.getElementById('edit-additional_details').value = car.additional_details || ''; // ADD THIS LINE
     document.getElementById('edit-car-id').value = carId;
     const existingImagesDiv = document.getElementById('edit-existing-images');
     if (existingImagesDiv) {
