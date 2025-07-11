@@ -90,7 +90,7 @@
                                 <tr>
                                     <td class="font-bold text-green-700" id="vehicle-price"></td>
                                     <td class="font-bold text-green-700" id="paid-amount"></td>
-                                    <td class="font-bold text-red-600">$0</td>
+                                    <td class="font-bold text-red-600">JP¥ 0</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -151,8 +151,7 @@
                                     <td id="transmission"></td>
                                 </tr>
                                 <tr>
-                                    <td class="font-medium">Grade</td>
-                                    <td id="grade">Luxury</td>
+                                    
                                     <td class="font-medium">Seats</td>
                                     <td id="seats"></td>
                                 </tr>
@@ -173,17 +172,11 @@
                                     <td id="doors"></td>
                                 </tr>
                                 <tr>
-                                    <td class="font-medium">maxLoading</td>
-                                    <td id="max-loading">-</td>
+                                    
                                     <td class="font-medium">Engine CC</td>
                                     <td id="engine-cc"></td>
                                 </tr>
-                                <tr>
-                                    <td class="font-medium">Dimension (L×W×H)</td>
-                                    <td id="dimensions">-</td>
-                                    <td class="font-medium">M3</td>
-                                    <td id="m3">-</td>
-                                </tr>
+                                
                                 <tr>
                                     <td class="font-medium">Registration Year</td>
                                     <td id="reg-year"></td>
@@ -192,13 +185,7 @@
                                 </tr>
                             </tbody>
                         </table>
-                        <div class="p-3 bg-yellow-50 border-t border-gray-200">
-                            <p class="text-xs text-gray-600">
-                                <span class="text-red-600">*Registration Year</span> is a registration date in Japan and is NOT the Manufacture Year.<br>
-                                <span class="text-red-600">*Manufacture Year</span> is provided by international database info.<br>
-                                ICM JAPAN may not be liable for any issues/costs caused by this information.
-                            </p>
-                        </div>
+                        
                     </div>
 
                     <!-- Additional Details Section -->
@@ -280,8 +267,8 @@ function loadCarData(car, purchase) {
     document.getElementById('car-title').textContent = `${car.year} ${car.make} ${car.model}`;
     
     // Update payment info
-    document.getElementById('vehicle-price').textContent = `$${car.price.toLocaleString()}`;
-    document.getElementById('paid-amount').textContent = `$${car.price.toLocaleString()}`;
+    document.getElementById('vehicle-price').textContent = `JP¥ ${car.price.toLocaleString()}`;
+    document.getElementById('paid-amount').textContent = `JP¥ ${car.price.toLocaleString()}`;
     
     // Update shipping info
     document.getElementById('from-port').textContent = shippingInfo.from_port || 'N/A';

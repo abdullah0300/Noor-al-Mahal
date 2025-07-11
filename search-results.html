@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results - Noor Al Mahaba Trading</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#dc2626',
+                        secondary: '#991b1b',
+                        accent: '#fef2f2'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="bg-gray-50">
+    <!-- Header Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <img src="images/logo-img.png" alt="Noor Al Mahaba Trading" class="h-[10rem] w-[10rem]">
+                    </div>
+                </div>
+
+                <!-- Navigation Links -->
+                <div class="hidden lg:block">
+                    <div class="ml-10 flex items-center space-x-8">
+                        <a href="index.html"
+                            class="text-gray-600 hover:text-primary px-3 py-2 text-base font-medium transition-colors">Home</a>
+                        <a href="stock.html"
+                            class="text-gray-600 hover:text-primary px-3 py-2 text-base font-medium transition-colors">Stock</a>
+                        <a href="how-to-buy.html"
+                            class="text-gray-600 hover:text-primary px-3 py-2 text-base font-medium transition-colors">How
+                            to buy</a>
+                        <a href="about.html"
+                            class="text-gray-900 hover:text-primary px-3 py-2 text-base font-medium transition-colors">About
+                            Us</a>
+                        <a href="contact.html"
+                            class="text-gray-600 hover:text-primary px-3 py-2 text-base font-medium transition-colors">Contact
+                            Us</a>
+                        <button onclick="window.location.href='login.html'"
+                            class="bg-primary text-white px-6 py-2 rounded-md text-base font-medium hover:bg-secondary transition-colors">
+                            Portal Login
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Search Results Section -->
+    <section class="py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Back Button and Title -->
+            <div class="mb-8">
+                <button onclick="history.back()"
+                    class="text-primary hover:text-secondary font-medium mb-4 flex items-center">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                    Back to Search
+                </button>
+                <h1 class="text-4xl font-bold text-gray-900 mb-4">Search Results</h1>
+                <div id="search-info" class="text-xl text-gray-600"></div>
+            </div>
+
+            <!-- Search Results Grid -->
+            <div id="search-results-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Results will be loaded here -->
+            </div>
+
+            <!-- No Results Message -->
+            <div id="no-results" class="hidden text-center py-16">
+                <div class="text-gray-500 text-xl mb-4">No vehicles found matching your search criteria</div>
+                <button onclick="history.back()"
+                    class="bg-primary text-white px-6 py-3 rounded-lg font-semibold hover:bg-secondary transition-colors">
+                    Try Different Search
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Car Details Modal -->
+    <div id="car-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-2xl font-bold text-gray-900">Car Details</h3>
+                    <button onclick="closeCarModal()"
+                        class="text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
+                </div>
+                <div id="car-modal-content">
+                    <!-- Car details will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div id="notification"
+        class="fixed top-4 right-4 px-6 py-4 rounded-lg shadow-lg transform translate-x-full transition-transform duration-300 ease-in-out z-50">
+    </div>
+
+    <script>
+        // Supabase Configuration
+        const SUPABASE_URL = 'https://ixzgedpzhbzfomttiadg.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml4emdlZHB6aGJ6Zm9tdHRpYWRnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE4Nzg5MjIsImV4cCI6MjA2NzQ1NDkyMn0.laobv0954I3xlGijKj8dl8UILh5V3hqSoYDo1NiVlpw';
+
+        let supabase;
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            initSupabase();
+            loadSearchResults();
+        });
+
+        // Initialize Supabase
+        function initSupabase() {
+            if (window.supabase) {
+                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            } else {
+                console.error('Supabase client is not loaded');
+                showNotification('Failed to initialize database connection!', 'error');
+            }
+        }
+
+        // Load search results from URL parameters
+        async function loadSearchResults() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const make = urlParams.get('make');
+            const model = urlParams.get('model');
+            const bodyType = urlParams.get('bodyType');
+            const fuel = urlParams.get('fuel');
+
+            // Update search info
+            updateSearchInfo(make, model, bodyType, fuel);
+
+            try {
+                let query = supabase
+                    .from('cars')
+                    .select('*')
+                    .eq('status', 'available');
+
+                if (make) query = query.eq('make', make);
+                if (model) query = query.eq('model', model);
+                if (bodyType) query = query.eq('transmission', bodyType);
+                if (fuel) query = query.eq('fuel_type', fuel);
+
+                const { data, error } = await query.order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                displaySearchResults(data);
+            } catch (error) {
+                console.error('Error loading search results:', error);
+                showNotification('Failed to load search results!', 'error');
+            }
+        }
+
+        // Update search info display
+        function updateSearchInfo(make, model, bodyType, fuel) {
+            const searchInfo = document.getElementById('search-info');
+            const filters = [];
+
+            if (make) filters.push(`Make: ${make}`);
+            if (model) filters.push(`Model: ${model}`);
+            if (bodyType) filters.push(`Body Type: ${bodyType}`);
+            if (fuel) filters.push(`Fuel: ${fuel}`);
+
+            if (filters.length > 0) {
+                searchInfo.textContent = `Filtered by: ${filters.join(' | ')}`;
+            } else {
+                searchInfo.textContent = 'Showing all available vehicles';
+            }
+        }
+
+        // Display search results
+        function displaySearchResults(cars) {
+            const container = document.getElementById('search-results-grid');
+            const noResults = document.getElementById('no-results');
+
+            if (!cars || cars.length === 0) {
+                container.classList.add('hidden');
+                noResults.classList.remove('hidden');
+                return;
+            }
+
+            noResults.classList.add('hidden');
+            container.classList.remove('hidden');
+            container.innerHTML = '';
+
+            cars.forEach(car => {
+                const carCard = createSearchResultCard(car);
+                container.appendChild(carCard);
+            });
+        }
+
+        // Create search result card
+        function createSearchResultCard(car) {
+            const card = document.createElement('div');
+            card.className = 'bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 cursor-pointer';
+            card.onclick = () => showCarDetails(car);
+
+            const placeholderImage = 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80';
+            const mainImage = car.images && car.images.length > 0 ? car.images[0] : placeholderImage;
+
+            card.innerHTML = `
+                <div class="relative">
+                    <img src="${mainImage}" alt="${car.make} ${car.model}" 
+                         class="w-full h-48 object-cover rounded-t-xl">
+                    <div class="absolute top-4 right-4 bg-primary text-white px-3 py-1 rounded-full text-sm font-semibold">
+                        $${car.price.toLocaleString()}
+                    </div>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">${car.make} ${car.model}</h3>
+                    <p class="text-gray-600 mb-4">${car.year} • ${car.mileage.toLocaleString()} km</p>
+                    <div class="grid grid-cols-2 gap-4 text-sm text-gray-600 mb-4">
+                        <div class="flex items-center space-x-2">
+                            <span>⛽ ${car.fuel_type}</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span>⚙️ ${car.transmission}</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span>🎨 ${car.color}</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span>🔧 ${car.engine_cc}cc</span>
+                        </div>
+                    </div>
+                    <button onclick="event.stopPropagation(); showCarDetails(${car.id})" 
+                            class="w-full bg-primary text-white py-2 px-4 rounded-lg font-semibold hover:bg-secondary transition-colors">
+                        View Details
+                    </button>
+                </div>
+            `;
+
+            return card;
+        }
+
+        // Show car details modal (copy from main website)
+        function showCarDetails(carData) {
+            const car = typeof carData === 'object' ? carData : null;
+            if (!car) return;
+
+            const modal = document.getElementById('car-modal');
+            const content = document.getElementById('car-modal-content');
+
+            const placeholderImage = 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80';
+            const mainImage = car.images && car.images.length > 0 ? car.images[0] : placeholderImage;
+
+            content.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div>
+                        <img src="${mainImage}" alt="${car.make} ${car.model}" 
+                             class="w-full h-64 object-cover rounded-lg mb-4">
+                        ${car.images && car.images.length > 1 ? `
+                            <div class="grid grid-cols-3 gap-2">
+                                ${car.images.slice(1, 4).map(img => `
+                                    <img src="${img}" alt="${car.make} ${car.model}" 
+                                         class="w-full h-20 object-cover rounded cursor-pointer hover:opacity-80"
+                                         onclick="document.querySelector('#car-modal-content img').src='${img}'">
+                                `).join('')}
+                            </div>
+                        ` : ''}
+                    </div>
+                    <div>
+                        <h3 class="text-3xl font-bold text-gray-900 mb-2">${car.make} ${car.model}</h3>
+                        <p class="text-2xl font-bold text-primary mb-6">$${car.price.toLocaleString()}</p>
+                        
+                        <div class="grid grid-cols-2 gap-4 mb-6">
+                            <div class="bg-gray-50 p-3 rounded">
+                                <p class="text-sm text-gray-600">Year</p>
+                                <p class="font-semibold">${car.year}</p>
+                            </div>
+                            <div class="bg-gray-50 p-3 rounded">
+                                <p class="text-sm text-gray-600">Mileage</p>
+                                <p class="font-semibold">${car.mileage.toLocaleString()} km</p>
+                            </div>
+                            <div class="bg-gray-50 p-3 rounded">
+                                <p class="text-sm text-gray-600">Fuel Type</p>
+                                <p class="font-semibold">${car.fuel_type}</p>
+                            </div>
+                            <div class="bg-gray-50 p-3 rounded">
+                                <p class="text-sm text-gray-600">Transmission</p>
+                                <p class="font-semibold">${car.transmission}</p>
+                            </div>
+                            <div class="bg-gray-50 p-3 rounded">
+                                <p class="text-sm text-gray-600">Color</p>
+                                <p class="font-semibold">${car.color}</p>
+                            </div>
+                            <div class="bg-gray-50 p-3 rounded">
+                                <p class="text-sm text-gray-600">Engine CC</p>
+                                <p class="font-semibold">${car.engine_cc}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-3">
+                            <button onclick="window.location.href='index.html'" 
+                                    class="w-full bg-primary text-white py-3 px-6 rounded-lg font-semibold hover:bg-secondary transition-colors">
+                                Inquire Now
+                            </button>
+                            <button onclick="closeCarModal()" 
+                                    class="w-full bg-gray-200 text-gray-800 py-3 px-6 rounded-lg font-semibold hover:bg-gray-300 transition-colors">
+                                Close
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        // Close car modal
+        function closeCarModal() {
+            const modal = document.getElementById('car-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        // Show notification
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            if (!notification) return;
+
+            notification.textContent = message;
+
+            if (type === 'success') {
+                notification.className = 'fixed top-4 right-4 px-6 py-4 rounded-lg shadow-lg bg-green-500 text-white transform translate-x-0 transition-transform duration-300 ease-in-out z-50';
+            } else if (type === 'error') {
+                notification.className = 'fixed top-4 right-4 px-6 py-4 rounded-lg shadow-lg bg-red-500 text-white transform translate-x-0 transition-transform duration-300 ease-in-out z-50';
+            }
+
+            setTimeout(() => {
+                notification.classList.add('translate-x-full');
+            }, 3000);
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('car-modal').addEventListener('click', function (e) {
+            if (e.target === this) {
+                closeCarModal();
+            }
+        });
+    </script>
+</body>
+
+</html>

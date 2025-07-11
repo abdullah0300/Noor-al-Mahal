@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock - All Vehicles | Noor Al Mahaba Trading</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#dc2626',
+                        secondary: '#991b1b',
+                        accent: '#fef2f2'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="bg-gray-50">
+    <!-- Header Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <img src="images/logo-img.png" alt="Noor Al Mahaba Trading" class="h-[10rem] w-[10rem]">
+                    </div>
+                </div>
+
+                <!-- Navigation Links -->
+                <div class="hidden lg:block">
+                    <div class="ml-10 flex items-center space-x-8">
+                        <a href="index.html"
+                            class="text-gray-600 hover:text-primary px-3 py-2 text-base font-medium transition-colors">Home</a>
+                        <a href="stock.html"
+                            class="text-gray-600 hover:text-primary px-3 py-2 text-base font-medium transition-colors">Stock</a>
+                        <a href="how-to-buy.html"
+                            class="text-gray-600 hover:text-primary px-3 py-2 text-base font-medium transition-colors">How
+                            to buy</a>
+                        <a href="about.html"
+                            class="text-gray-900 hover:text-primary px-3 py-2 text-base font-medium transition-colors">About
+                            Us</a>
+                        <a href="contact.html"
+                            class="text-gray-600 hover:text-primary px-3 py-2 text-base font-medium transition-colors">Contact
+                            Us</a>
+                        <button onclick="window.location.href='login.html'"
+                            class="bg-primary text-white px-6 py-2 rounded-md text-base font-medium hover:bg-secondary transition-colors">
+                            Portal Login
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Mobile menu button -->
+                <div class="lg:hidden">
+                    <button type="button"
+                        class="mobile-menu-button bg-white/20 backdrop-blur-sm inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-gray-900 hover:bg-white/30">
+                        <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Stock Page Header -->
+    <section class="py-12 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-8">
+                <h1 class="text-4xl font-bold text-gray-900 mb-4">Our Vehicle Stock</h1>
+                <p class="text-xl text-gray-600">Browse our complete inventory of premium Japanese vehicles</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Filter and Search Section -->
+    <section class="py-8 bg-white border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                <!-- Search Input -->
+                <div>
+                    <input type="text" id="search-input" placeholder="Search by make, model..."
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+                </div>
+
+                <!-- Status Filter -->
+                <div>
+                    <select id="status-filter"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+                        <option value="">All Status</option>
+                        <option value="available">Available</option>
+                        <option value="sold">Sold</option>
+                    </select>
+                </div>
+
+                <!-- Make Filter -->
+                <div>
+                    <select id="make-filter"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+                        <option value="">All Makes</option>
+                    </select>
+                </div>
+
+                <!-- Sort Options -->
+                <div>
+                    <select id="sort-filter"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+                        <option value="newest">Newest First</option>
+                        <option value="oldest">Oldest First</option>
+                        <option value="price-low">Price: Low to High</option>
+                        <option value="price-high">Price: High to Low</option>
+                        <option value="mileage-low">Mileage: Low to High</option>
+                        <option value="mileage-high">Mileage: High to Low</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="flex flex-wrap gap-4 items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <button onclick="applyFilters()"
+                        class="bg-primary text-white px-6 py-2 rounded-lg font-semibold hover:bg-secondary transition-colors">
+                        Apply Filters
+                    </button>
+                    <button onclick="clearFilters()"
+                        class="bg-gray-200 text-gray-800 px-6 py-2 rounded-lg font-semibold hover:bg-gray-300 transition-colors">
+                        Clear All
+                    </button>
+                </div>
+                <div id="results-count" class="text-gray-600">
+                    Loading vehicles...
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stock Grid Section -->
+    <section class="py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Loading State -->
+            <div id="loading" class="text-center py-12">
+                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+                <p class="text-gray-600">Loading vehicles...</p>
+            </div>
+
+            <!-- Stock Grid -->
+            <div id="stock-grid" class="hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <!-- Cars will be loaded here -->
+            </div>
+
+            <!-- No Results -->
+            <div id="no-results" class="hidden text-center py-16">
+                <div class="text-gray-500 text-xl mb-4">No vehicles found matching your criteria</div>
+                <button onclick="clearFilters()"
+                    class="bg-primary text-white px-6 py-3 rounded-lg font-semibold hover:bg-secondary transition-colors">
+                    Clear Filters
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Car Details Modal -->
+    <div id="car-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-2xl font-bold text-gray-900">Vehicle Details</h3>
+                    <button onclick="closeCarModal()"
+                        class="text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
+                </div>
+                <div id="car-modal-content">
+                    <!-- Car details will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div id="notification"
+        class="fixed top-4 right-4 px-6 py-4 rounded-lg shadow-lg transform translate-x-full transition-transform duration-300 ease-in-out z-50">
+    </div>
+
+    <script>
+        // Supabase Configuration
+        const SUPABASE_URL = 'https://ixzgedpzhbzfomttiadg.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml4emdlZHB6aGJ6Zm9tdHRpYWRnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE4Nzg5MjIsImV4cCI6MjA2NzQ1NDkyMn0.laobv0954I3xlGijKj8dl8UILh5V3hqSoYDo1NiVlpw';
+
+        let supabase;
+        let allCars = [];
+        let filteredCars = [];
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            initSupabase();
+            loadAllCars();
+            setupEventListeners();
+        });
+
+        // Initialize Supabase
+        function initSupabase() {
+            if (window.supabase) {
+                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            } else {
+                console.error('Supabase client is not loaded');
+                showNotification('Failed to initialize database connection!', 'error');
+            }
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Real-time search
+            document.getElementById('search-input').addEventListener('input', debounce(applyFilters, 300));
+
+            // Mobile menu
+            const mobileMenuButton = document.querySelector('.mobile-menu-button');
+            if (mobileMenuButton) {
+                mobileMenuButton.addEventListener('click', () => {
+                    // Add mobile menu functionality if needed
+                });
+            }
+        }
+
+        // Debounce function for search
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // Load all cars from database
+        async function loadAllCars() {
+            try {
+                const { data, error } = await supabase
+                    .from('cars')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                allCars = data || [];
+                filteredCars = [...allCars];
+
+                populateMakeFilter();
+                displayCars();
+                updateResultsCount();
+
+                document.getElementById('loading').classList.add('hidden');
+                document.getElementById('stock-grid').classList.remove('hidden');
+            } catch (error) {
+                console.error('Error loading cars:', error);
+                showNotification('Failed to load vehicles!', 'error');
+                document.getElementById('loading').classList.add('hidden');
+                document.getElementById('no-results').classList.remove('hidden');
+            }
+        }
+
+        // Populate make filter dropdown
+        function populateMakeFilter() {
+            const makeFilter = document.getElementById('make-filter');
+            const makes = [...new Set(allCars.map(car => car.make))].sort();
+
+            makeFilter.innerHTML = '<option value="">All Makes</option>';
+            makes.forEach(make => {
+                const option = document.createElement('option');
+                option.value = make;
+                option.textContent = make;
+                makeFilter.appendChild(option);
+            });
+        }
+
+        // Apply filters
+        function applyFilters() {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            const statusFilter = document.getElementById('status-filter').value;
+            const makeFilter = document.getElementById('make-filter').value;
+            const sortFilter = document.getElementById('sort-filter').value;
+
+            // Filter cars
+            filteredCars = allCars.filter(car => {
+                const matchesSearch = !searchTerm ||
+                    car.make.toLowerCase().includes(searchTerm) ||
+                    car.model.toLowerCase().includes(searchTerm) ||
+                    car.color.toLowerCase().includes(searchTerm);
+
+                const matchesStatus = !statusFilter || car.status === statusFilter;
+                const matchesMake = !makeFilter || car.make === makeFilter;
+
+                return matchesSearch && matchesStatus && matchesMake;
+            });
+
+            // Sort cars
+            filteredCars.sort((a, b) => {
+                switch (sortFilter) {
+                    case 'oldest':
+                        return new Date(a.created_at) - new Date(b.created_at);
+                    case 'price-low':
+                        return a.price - b.price;
+                    case 'price-high':
+                        return b.price - a.price;
+                    case 'mileage-low':
+                        return a.mileage - b.mileage;
+                    case 'mileage-high':
+                        return b.mileage - a.mileage;
+                    case 'newest':
+                    default:
+                        return new Date(b.created_at) - new Date(a.created_at);
+                }
+            });
+
+            displayCars();
+            updateResultsCount();
+        }
+
+        // Clear all filters
+        function clearFilters() {
+            document.getElementById('search-input').value = '';
+            document.getElementById('status-filter').value = '';
+            document.getElementById('make-filter').value = '';
+            document.getElementById('sort-filter').value = 'newest';
+
+            filteredCars = [...allCars];
+            applyFilters();
+        }
+
+        // Update results count
+        function updateResultsCount() {
+            const count = filteredCars.length;
+            const total = allCars.length;
+            document.getElementById('results-count').textContent =
+                `Showing ${count} of ${total} vehicles`;
+        }
+
+        // Display cars in grid
+        function displayCars() {
+            const container = document.getElementById('stock-grid');
+            const noResults = document.getElementById('no-results');
+
+            if (filteredCars.length === 0) {
+                container.classList.add('hidden');
+                noResults.classList.remove('hidden');
+                return;
+            }
+
+            noResults.classList.add('hidden');
+            container.classList.remove('hidden');
+            container.innerHTML = '';
+
+            filteredCars.forEach(car => {
+                const carCard = createStockCard(car);
+                container.appendChild(carCard);
+            });
+        }
+
+        // Create stock card
+        function createStockCard(car) {
+            const card = document.createElement('div');
+            card.className = 'bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 cursor-pointer';
+            card.onclick = () => showCarDetails(car);
+
+            const placeholderImage = 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80';
+            const mainImage = car.images && car.images.length > 0 ? car.images[0] : placeholderImage;
+
+            // Status styling
+            const statusClass = car.status === 'available' ? 'bg-green-500' : 'bg-red-500';
+            const statusText = car.status === 'available' ? 'Available' : 'Sold';
+
+            card.innerHTML = `
+                <div class="relative">
+                    <img src="${mainImage}" alt="${car.make} ${car.model}" 
+                         class="w-full h-48 object-cover rounded-t-xl">
+                    <div class="absolute top-4 right-4 ${statusClass} text-white px-3 py-1 rounded-full text-sm font-semibold">
+                        ${statusText}
+                    </div>
+                    <div class="absolute top-4 left-4 bg-primary text-white px-3 py-1 rounded-full text-sm font-semibold">
+                        $${car.price.toLocaleString()}
+                    </div>
+                </div>
+                <div class="p-4">
+                    <h3 class="text-lg font-bold text-gray-900 mb-2">${car.make} ${car.model}</h3>
+                    <p class="text-gray-600 mb-3">${car.year} • ${car.mileage.toLocaleString()} km</p>
+                    <div class="grid grid-cols-2 gap-2 text-xs text-gray-600 mb-4">
+                        <div class="flex items-center space-x-1">
+                            <span>⛽</span>
+                            <span>${car.fuel_type}</span>
+                        </div>
+                        <div class="flex items-center space-x-1">
+                            <span>⚙️</span>
+                            <span>${car.transmission}</span>
+                        </div>
+                        <div class="flex items-center space-x-1">
+                            <span>🎨</span>
+                            <span>${car.color}</span>
+                        </div>
+                        <div class="flex items-center space-x-1">
+                            <span>🔧</span>
+                            <span>${car.engine_cc}cc</span>
+                        </div>
+                    </div>
+                    <button onclick="event.stopPropagation(); showCarDetails(${car.id})" 
+        class="w-full ${car.status === 'available' ? 'bg-primary hover:bg-secondary' : 'bg-gray-400 cursor-not-allowed'} text-white py-2 px-4 rounded-lg font-semibold transition-colors">
+    ${car.status === 'available' ? 'View Details' : 'Sold Out'}
+</button>
+                </div>
+            `;
+
+            return card;
+        }
+
+        // Show car details modal
+        // Show car details - redirect to details page
+        function showCarDetails(carData) {
+            const car = typeof carData === 'object' ? carData : filteredCars.find(c => c.id === carData);
+            if (!car) return;
+
+            // Redirect to car details page with car ID
+            window.location.href = `car-details-web.html?id=${car.id}`;
+        }
+        // Close car modal
+        function closeCarModal() {
+            const modal = document.getElementById('car-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        // Show notification
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            if (!notification) return;
+
+            notification.textContent = message;
+
+            if (type === 'success') {
+                notification.className = 'fixed top-4 right-4 px-6 py-4 rounded-lg shadow-lg bg-green-500 text-white transform translate-x-0 transition-transform duration-300 ease-in-out z-50';
+            } else if (type === 'error') {
+                notification.className = 'fixed top-4 right-4 px-6 py-4 rounded-lg shadow-lg bg-red-500 text-white transform translate-x-0 transition-transform duration-300 ease-in-out z-50';
+            }
+
+            setTimeout(() => {
+                notification.classList.add('translate-x-full');
+            }, 3000);
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('car-modal').addEventListener('click', function (e) {
+            if (e.target === this) {
+                closeCarModal();
+            }
+        });
+    </script>
+</body>
+
+</html>

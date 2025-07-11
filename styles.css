@@ -390,6 +390,222 @@
             }
         }
 
+        /* Additional styles for car integration - Add this to your existing index.css */
+
+/* Ensure arrival-car-flex is a grid for better layout */
+#arrival-car-flex {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 25px;
+    margin-top: 30px;
+}
+
+/* Search results styling */
+#search-results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 25px;
+    margin-top: 30px;
+}
+
+/* Arrival car styling improvements */
+.arrival-car {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.arrival-car:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.arrival-inside {
+    padding: 0;
+}
+
+.arrival-inside-img {
+    width: 100%;
+    height: 200px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+}
+
+.arrival-inside-txt {
+    padding: 20px;
+}
+
+.arrival-txt-1 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.arrival-txt-2 {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 15px;
+}
+
+.arrival-txt-3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #ff6b6b;
+    margin-bottom: 15px;
+}
+
+.register-2 {
+    display: inline-block;
+    padding: 12px 25px;
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    color: white;
+    text-decoration: none;
+    border-radius: 10px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.register-2:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+}
+
+/* Modal improvements */
+.modal {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Search filter styling */
+.filter-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    align-items: end;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.search-input {
+    padding: 12px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* Responsive improvements */
+@media (max-width: 768px) {
+    #arrival-car-flex,
+    #search-results-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .filter-container {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .arrival-inside-img {
+        height: 180px;
+    }
+    
+    .arrival-txt-1 {
+        font-size: 1.1rem;
+    }
+    
+    .arrival-txt-3 {
+        font-size: 1.3rem;
+    }
+}
+
+/* Stock modal improvements */
+#stock-modal .modal-content {
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+#stock-grid {
+    max-height: calc(90vh - 150px);
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+/* Scrollbar styling for webkit browsers */
+#stock-grid::-webkit-scrollbar {
+    width: 8px;
+}
+
+#stock-grid::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+#stock-grid::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+#stock-grid::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Car detail modal improvements */
+#car-detail-modal .modal-content {
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+/* Button hover effects */
+button:hover {
+    transform: translateY(-2px);
+}
+
+/* Loading state styles */
+.loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 50px;
+    color: #666;
+}
+
+.loading::after {
+    content: '';
+    width: 20px;
+    height: 20px;
+    border: 2px solid #666;
+    border-top: 2px solid transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-left: 10px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
         @media print {
     /* Hide everything first */
     body * { 
