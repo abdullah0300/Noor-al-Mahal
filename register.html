@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration - Noor Al Mahaba Trading</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#dc2626',
+                        secondary: '#991b1b',
+                        accent: '#fef2f2'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="bg-gray-100 min-h-screen">
+ 
+
+    <!-- Breadcrumb -->
+    <div class="bg-gray-200 py-4">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <nav class="flex" aria-label="Breadcrumb">
+                <ol class="inline-flex items-center space-x-1 md:space-x-3">
+                    <li class="inline-flex items-center">
+                        <a href="index.html" class="text-primary hover:text-secondary font-medium">
+                            Home
+                        </a>
+                    </li>
+                    <li>
+                        <div class="flex items-center">
+                            <span class="mx-2 text-gray-500">|</span>
+                            <span class="text-gray-700">Membership Registration</span>
+                        </div>
+                    </li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Registration Form Section -->
+    <section class="py-12">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Title -->
+            <div class="text-center mb-12">
+                <h1 class="text-5xl font-bold text-gray-900 mb-4">FREE MEMBERSHIP REGISTRATION</h1>
+                <p class="text-lg text-gray-600">Join our community to get exclusive access to premium Japanese vehicles
+                </p>
+            </div>
+
+            <!-- Registration Form -->
+            <div class="bg-white rounded-2xl shadow-xl p-8">
+                <form id="registration-form" class="space-y-6">
+                    <!-- Title and Name Row -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Title</label>
+                            <div class="relative">
+                                <select id="title" required
+                                    class="w-full px-4 py-4 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent appearance-none bg-white text-lg">
+                                    <option value="">Mr.</option>
+                                    <option value="Mr">Mr.</option>
+                                    <option value="Mrs">Mrs.</option>
+                                    <option value="Ms">Ms.</option>
+                                    <option value="Dr">Dr.</option>
+                                </select>
+                                <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+                            <input type="text" id="fullName" required placeholder="Enter Your Name"
+                                class="w-full px-4 py-4 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-lg">
+                        </div>
+                    </div>
+
+                    <!-- Company Name -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Company Name</label>
+                        <input type="text" id="companyName" placeholder="Company name"
+                            class="w-full px-4 py-4 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-lg">
+                    </div>
+
+                    <!-- Country -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Country</label>
+                        <div class="relative">
+                            <select id="country" required
+                                class="w-full px-4 py-4 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent appearance-none bg-white text-lg">
+                                <option value="">Select Country</option>
+                                <option value="AF">Afghanistan</option>
+                                <option value="AL">Albania</option>
+                                <option value="DZ">Algeria</option>
+                                <option value="AR">Argentina</option>
+                                <option value="AU">Australia</option>
+                                <option value="BD">Bangladesh</option>
+                                <option value="BR">Brazil</option>
+                                <option value="CA">Canada</option>
+                                <option value="CN">China</option>
+                                <option value="EG">Egypt</option>
+                                <option value="FR">France</option>
+                                <option value="DE">Germany</option>
+                                <option value="IN">India</option>
+                                <option value="ID">Indonesia</option>
+                                <option value="JP">Japan</option>
+                                <option value="KE">Kenya</option>
+                                <option value="MY">Malaysia</option>
+                                <option value="MX">Mexico</option>
+                                <option value="NZ">New Zealand</option>
+                                <option value="NG">Nigeria</option>
+                                <option value="PK">Pakistan</option>
+                                <option value="PH">Philippines</option>
+                                <option value="RU">Russia</option>
+                                <option value="SA">Saudi Arabia</option>
+                                <option value="SG">Singapore</option>
+                                <option value="ZA">South Africa</option>
+                                <option value="KR">South Korea</option>
+                                <option value="LK">Sri Lanka</option>
+                                <option value="TH">Thailand</option>
+                                <option value="TR">Turkey</option>
+                                <option value="AE">United Arab Emirates</option>
+                                <option value="GB">United Kingdom</option>
+                                <option value="US">United States</option>
+                                <option value="VN">Vietnam</option>
+                            </select>
+                            <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Phone and Messaging Apps -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+                            <input type="tel" id="phoneNumber" required placeholder="Enter Telephone/Mobile No"
+                                class="w-full px-4 py-4 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-lg">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Preferred Contact Method</label>
+                            <div class="flex items-center space-x-6 pt-2">
+                                <label class="flex items-center">
+                                    <input type="checkbox" id="whatsapp"
+                                        class="w-5 h-5 text-primary rounded border-gray-300 focus:ring-primary">
+                                    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg"
+                                        alt="WhatsApp" class="w-8 h-8 ml-2">
+                                </label>
+                                
+                                <label class="flex items-center">
+                                    <input type="checkbox" id="line"
+                                        class="w-5 h-5 text-primary rounded border-gray-300 focus:ring-primary">
+                                    <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/LINE_logo.svg"
+                                        alt="Line" class="w-8 h-8 ml-2">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Email -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                        <input type="email" id="email" required placeholder="Enter your E-mail"
+                            class="w-full px-4 py-4 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-lg">
+                    </div>
+
+                    <!-- Password -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                        <input type="password" id="password" required placeholder="Enter Your Password"
+                            class="w-full px-4 py-4 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-lg">
+                        <p class="text-sm text-gray-500 mt-1">Password must be at least 8 characters long</p>
+                    </div>
+
+                    
+
+                    <!-- Submit Button -->
+                    <div class="text-center pt-6">
+                        <button type="submit"
+                            class="bg-blue-600 hover:bg-blue-700 text-white px-16 py-4 rounded-lg text-xl font-semibold transition-colors shadow-lg">
+                            Register
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Login Link -->
+                <div class="text-center mt-8 p-4 bg-gray-50 rounded-lg">
+                    <p class="text-gray-600">
+                        Already have an account?
+                        <a href="login.html" class="text-primary hover:text-secondary font-semibold underline">Login
+                            here</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    
+
+    <!-- Notification -->
+    <div id="notification"
+        class="fixed top-4 right-4 px-6 py-4 rounded-lg shadow-lg transform translate-x-full transition-transform duration-300 ease-in-out z-50">
+    </div>
+
+    <script>
+        // Supabase Configuration
+        const SUPABASE_URL = 'https://ixzgedpzhbzfomttiadg.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml4emdlZHB6aGJ6Zm9tdHRpYWRnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE4Nzg5MjIsImV4cCI6MjA2NzQ1NDkyMn0.laobv0954I3xlGijKj8dl8UILh5V3hqSoYDo1NiVlpw';
+
+        let supabase;
+
+        // Initialize Supabase
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.supabase) {
+                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            } else {
+                console.error('Supabase client is not loaded');
+            }
+
+            setupFormHandler();
+        });
+
+        // Setup form submission handler
+        function setupFormHandler() {
+            const form = document.getElementById('registration-form');
+            form.addEventListener('submit', handleRegistration);
+        }
+
+        // Handle registration form submission
+        async function handleRegistration(e) {
+            e.preventDefault();
+
+            // Get form data
+            const formData = {
+                title: document.getElementById('title').value,
+                name: document.getElementById('fullName').value,
+                company_name: document.getElementById('companyName').value,
+                country: document.getElementById('country').value,
+                phone: document.getElementById('phoneNumber').value,
+                email: document.getElementById('email').value,
+                password_hash: document.getElementById('password').value,
+                preferred_contact: getPreferredContact(),
+                address: '', // Can be added later if needed
+                created_at: new Date().toISOString()
+            };
+
+            // Validate required fields
+            if (!formData.name || !formData.email || !formData.password_hash || !formData.phone || !formData.country) {
+                showNotification('Please fill in all required fields', 'error');
+                return;
+            }
+
+            // Validate email format
+            if (!isValidEmail(formData.email)) {
+                showNotification('Please enter a valid email address', 'error');
+                return;
+            }
+
+            // Validate password length
+            if (formData.password_hash.length < 8) {
+                showNotification('Password must be at least 8 characters long', 'error');
+                return;
+            }
+
+            try {
+                // Check if email already exists
+                const { data: existingUser, error: checkError } = await supabase
+                    .from('customers')
+                    .select('email')
+                    .eq('email', formData.email)
+                    .single();
+
+                if (existingUser) {
+                    showNotification('An account with this email already exists', 'error');
+                    return;
+                }
+
+                // Insert new customer
+                const { data, error } = await supabase
+                    .from('customers')
+                    .insert([formData])
+                    .select()
+                    .single();
+
+                if (error) {
+                    throw error;
+                }
+
+                showNotification('Registration successful! You can now login to your account.', 'success');
+
+                // Clear form
+                document.getElementById('registration-form').reset();
+
+                // Redirect to login after 3 seconds
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 3000);
+
+            } catch (error) {
+                console.error('Registration error:', error);
+                showNotification('Registration failed. Please try again.', 'error');
+            }
+        }
+
+        // Get preferred contact methods
+        function getPreferredContact() {
+            const methods = [];
+            if (document.getElementById('whatsapp').checked) methods.push('WhatsApp');
+            if (document.getElementById('viber').checked) methods.push('Viber');
+            if (document.getElementById('line').checked) methods.push('Line');
+            return methods.join(', ');
+        }
+
+        // Validate email format
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        // Show notification
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            if (!notification) return;
+
+            notification.textContent = message;
+
+            if (type === 'success') {
+                notification.className = 'fixed top-4 right-4 px-6 py-4 rounded-lg shadow-lg bg-green-500 text-white transform translate-x-0 transition-transform duration-300 ease-in-out z-50';
+            } else if (type === 'error') {
+                notification.className = 'fixed top-4 right-4 px-6 py-4 rounded-lg shadow-lg bg-red-500 text-white transform translate-x-0 transition-transform duration-300 ease-in-out z-50';
+            }
+
+            setTimeout(() => {
+                notification.classList.add('translate-x-full');
+            }, 5000);
+        }
+    </script>
+</body>
+
+</html>
