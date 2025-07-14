@@ -1072,7 +1072,7 @@ function createCustomerCarCard(car, purchase) {
                 <div class="text-sm space-y-1">
                     <div class="flex justify-between text-green-700">
                         <span>Vehicle Price:</span>
-                        <span class="font-semibold"> JP¥ ${car.price.toLocaleString()} (Paid)</span>
+                        <span class="bold"> JP¥ ${car.price.toLocaleString()} (Paid)</span>
                     </div>
                     <div class="flex justify-between text-green-700">
                         <span>Balance:</span>

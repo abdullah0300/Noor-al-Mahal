@@ -51,46 +51,45 @@
     </div>
 
     <!-- Main Content -->
-    <div class="print-area max-w-7xl mx-auto p-6">
+    <div class="print-area max-w-full mx-auto p-4 min-h-screen">
         <div class="bg-white rounded-lg shadow-lg overflow-hidden">
             <!-- Car Title -->
-            <div class="bg-gradient-to-r from-primary to-secondary text-white p-6 text-center">
-                <h1 class="text-4xl font-bold" id="car-title"></h1>
-               
+            <div class="bg-gradient-to-r from-primary to-secondary text-white p-4 text-center">
+                <h1 class="text-2xl font-bold" id="car-title"></h1>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 p-6">
+            <div class="flex gap-4 p-4">
                 <!-- Left Side - Images -->
-                <div class="space-y-4">
+                <div class="w-2/5 flex flex-col gap-3">
                     <!-- Main Image -->
-                    <div class="border-4 border-gray-200 rounded-lg overflow-hidden">
+                    <div class="border-2 border-gray-200 rounded-lg overflow-hidden">
                         <img id="main-image" src="" alt="Car Main Image" class="w-full h-80 object-cover">
                     </div>
                     
                     <!-- Thumbnail Gallery -->
-                    <div class="grid grid-cols-6 gap-3" id="thumbnail-gallery">
+                    <div class="grid grid-cols-6 gap-2 h-24" id="thumbnail-gallery">
                         <!-- Thumbnails will be populated here -->
                     </div>
                 </div>
 
                 <!-- Right Side - Details -->
-                <div class="space-y-6">
+                <div class="w-3/5 flex flex-col gap-3">
                     <!-- Payment Section -->
                     <div class="bg-white border border-gray-200 rounded-lg overflow-hidden">
-                        <div class="section-header">Payment</div>
-                        <table class="detail-table w-full">
+                        <div style="background-color: green;" class=" text-white px-4 py-2 text-sm font-bold uppercase">Payment</div>
+                        <table class="w-full text-sm">
                             <thead>
-                                <tr>
-                                    <th>Vehicle Price</th>
-                                    <th>Paid</th>
-                                    <th>Vehicle Balance</th>
+                                <tr class="bg-gray-50 ">
+                                    <th class="p-3  text-left border-b">Vehicle Price</th>
+                                    <th class="p-3 text-left border-b">Paid</th>
+                                    <th class="p-3 text-left border-b">Vehicle Balance</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td class="font-bold text-green-700" id="vehicle-price"></td>
-                                    <td class="font-bold text-green-700" id="paid-amount"></td>
-                                    <td class="font-bold text-red-600">JP¥ 0</td>
+                                    <td class="p-3 font-bold text-black border-b" id="vehicle-price"></td>
+                                    <td class="p-3 font-bold text-lg text-green-700 border-b" id="paid-amount"></td>
+                                    <td class="p-3 font-bold text-red-600 border-b">JP¥ 0</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -98,42 +97,42 @@
 
                     <!-- Shipping Information -->
                     <div class="bg-white border border-gray-200 rounded-lg overflow-hidden">
-                        <div class="section-header">Shipping Information</div>
-                        <table class="detail-table w-full">
+                        <div style="background-color: grey;" class=" text-white px-4 py-2 text-sm font-bold uppercase">Shipping Information</div>
+                        <table class="w-full text-sm">
                             <tbody>
-                                <tr>
-                                    <td class="font-medium">From Port</td>
-                                    <td id="from-port"></td>
-                                    <td class="font-medium">Arrival Port</td>
-                                    <td id="arrival-port"></td>
+                                <tr class="border-b">
+                                    <td class="p-2 font-medium w-1/4">From Port</td>
+                                    <td class="p-2 w-1/4" id="from-port"></td>
+                                    <td class="p-2 font-medium w-1/4">Arrival Port</td>
+                                    <td class="p-2 w-1/4" id="arrival-port"></td>
+                                </tr>
+                                <tr class="border-b">
+                                    <td class="p-2 font-medium">Departure Date</td>
+                                    <td class="p-2" id="departure-date"></td>
+                                    <td class="p-2 font-medium">Arrival Date</td>
+                                    <td class="p-2" id="arrival-date"></td>
+                                </tr>
+                                <tr class="border-b">
+                                    <td class="p-2 font-medium">Consignee</td>
+                                    <td class="p-2" colspan="3" id="consignee"></td>
+                                </tr>
+                                <tr class="border-b">
+                                    <td class="p-2 font-medium">Consignee Address</td>
+                                    <td class="p-2" colspan="3" id="consignee-address"></td>
+                                </tr>
+                                <tr class="border-b">
+                                    <td class="p-2 font-medium">Consignee TEL</td>
+                                    <td class="p-2" id="consignee-tel"></td>
+                                    <td class="p-2 font-medium">Notify</td>
+                                    <td class="p-2" id="notify-address"></td>
+                                </tr>
+                                <tr class="border-b">
+                                    <td class="p-2 font-medium">Notify Address</td>
+                                    <td class="p-2" colspan="3" id="full-notify-address"></td>
                                 </tr>
                                 <tr>
-                                    <td class="font-medium">Departure Date</td>
-                                    <td id="departure-date"></td>
-                                    <td class="font-medium">Arrival Date</td>
-                                    <td id="arrival-date"></td>
-                                </tr>
-                                <tr>
-                                    <td class="font-medium">Consignee</td>
-                                    <td colspan="3" id="consignee"></td>
-                                </tr>
-                                <tr>
-                                    <td class="font-medium">Consignee Address</td>
-                                    <td colspan="3" id="consignee-address"></td>
-                                </tr>
-                                <tr>
-                                    <td class="font-medium">Consignee TEL</td>
-                                    <td id="consignee-tel"></td>
-                                    <td class="font-medium">Notify</td>
-                                    <td id="notify-address"></td>
-                                </tr>
-                                <tr>
-                                    <td class="font-medium">Notify Address</td>
-                                    <td colspan="3" id="full-notify-address"></td>
-                                </tr>
-                                <tr>
-                                    <td class="font-medium">Notify TEL</td>
-                                    <td colspan="3" id="notify-tel"></td>
+                                    <td class="p-2 font-medium">Notify TEL</td>
+                                    <td class="p-2" colspan="3" id="notify-tel"></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -141,47 +140,46 @@
 
                     <!-- Car Specifications -->
                     <div class="bg-white border border-gray-200 rounded-lg overflow-hidden">
-                        <div class="section-header">Car Specs</div>
-                        <table class="detail-table w-full">
+                        <div style="background-color: grey;" class="bg-red-800 text-white px-4 py-2 text-sm font-bold uppercase">Car Specs</div>
+                        <table class="w-full text-sm">
                             <tbody>
-                                <tr>
-                                    <td class="font-medium">Rec No</td>
-                                    <td id="rec-no"></td>
-                                    <td class="font-medium">Shift</td>
-                                    <td id="transmission"></td>
+                                <tr class="border-b">
+                                    <td class="p-2 font-medium w-1/4">Rec No</td>
+                                    <td class="p-2 w-1/4" id="rec-no"></td>
+                                    <td class="p-2 font-medium w-1/4">Shift</td>
+                                    <td class="p-2 w-1/4" id="transmission"></td>
                                 </tr>
-                                <tr>
-                                    
-                                    <td class="font-medium">Seats</td>
-                                    <td id="seats"></td>
+                                <tr class="border-b">
+                                    <td class="p-2 font-medium">Seats</td>
+                                    <td class="p-2" id="seats"></td>
                                 </tr>
-                                <tr>
-                                    <td class="font-medium">Chassis</td>
-                                    <td colspan="3" id="chassis" class="font-mono text-sm"></td>
+                                <tr class="border-b">
+                                    <td class="p-2 font-medium">Chassis</td>
+                                    <td class="p-2 font-mono text-sm" colspan="3" id="chassis"></td>
                                 </tr>
-                                <tr>
-                                    <td class="font-medium">Mileage</td>
-                                    <td id="mileage"></td>
-                                    <td class="font-medium">Fuel</td>
-                                    <td id="fuel"></td>
+                                <tr class="border-b">
+                                    <td class="p-2 font-medium">Mileage</td>
+                                    <td class="p-2" id="mileage"></td>
+                                    <td class="p-2 font-medium">Fuel</td>
+                                    <td class="p-2" id="fuel"></td>
                                 </tr>
-                                <tr>
-                                    <td class="font-medium">Color</td>
-                                    <td id="color"></td>
-                                    <td class="font-medium">Doors</td>
-                                    <td id="doors"></td>
+                                <tr class="border-b">
+                                    <td class="p-2 font-medium">Color</td>
+                                    <td class="p-2" id="color"></td>
+                                    <td class="p-2 font-medium">Doors</td>
+                                    <td class="p-2" id="doors"></td>
                                 </tr>
-                                <tr>
-                                    
-                                    <td class="font-medium">Engine CC</td>
-                                    <td id="engine-cc"></td>
+                                <tr class="border-b">
+                                   
+                                    <td class="p-2 font-medium">Engine CC</td>
+                                    <td class="p-2" id="engine-cc"></td>
                                 </tr>
                                 
                                 <tr>
-                                    <td class="font-medium">Registration Year</td>
-                                    <td id="reg-year"></td>
-                                    <td class="font-medium">LectureYear</td>
-                                    <td id="lecture-year"></td>
+                                    <td class="p-2 font-medium">Registration Year</td>
+                                    <td class="p-2" id="reg-year"></td>
+                                    <td class="p-2 font-medium">Manufacture Year</td>
+                                    <td class="p-2" id="lecture-year"></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -189,20 +187,32 @@
                     </div>
 
                     <!-- Additional Details Section -->
-                    <div class="bg-white border border-gray-200 rounded-lg overflow-hidden" id="additional-details-section" style="display: none;">
-                        <div class="section-header">Additional Details</div>
-                        <div class="p-4">
-                            <p id="additional-details-content" class="text-gray-700 whitespace-pre-wrap"></p>
+                    <div  class="bg-white border border-gray-200 rounded-lg overflow-hidden" id="additional-details-section" style="display: none;">
+                        <div class="bg-red-800 text-white px-4 py-2 text-sm font-bold uppercase">Additional Details</div>
+                        <div class="p-3">
+                            <p id="additional-details-content" class="text-gray-700 whitespace-pre-wrap text-sm"></p>
                         </div>
                     </div>
 
                     <!-- Options Section -->
                     <div class="bg-white border border-gray-200 rounded-lg overflow-hidden">
-                        <div class="section-header">Options</div>
-                        <div class="p-4 space-y-2 text-sm">
-                            <div><strong>Purchase Date:</strong> <span id="purchase-date"></span></div>
-                            <div><strong>Order ID:</strong> <span id="order-id"></span></div>
-                            <div><strong>Status:</strong> <span id="status" class="text-green-600 font-medium"></span></div>
+                        <div style="background-color: grey;" class="bg-red-800 text-white px-4 py-2 text-sm font-bold uppercase">Options</div>
+                        <div class="p-3 space-y-2 text-sm">
+                            
+                            <div class="border-t pt-2 mt-3">
+                                <div class="flex justify-between">
+                                    <span class="font-medium">Purchase Date:</span>
+                                    <span id="purchase-date"></span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="font-medium">Order ID:</span>
+                                    <span id="order-id"></span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="font-medium">Status:</span>
+                                    <span id="status" class="text-green-600 font-medium"></span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
