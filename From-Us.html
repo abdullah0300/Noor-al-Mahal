@@ -38,21 +38,53 @@
                 <div class="hidden lg:block">
                     <div class="ml-10 flex items-center space-x-8">
                         <a href="index.html"
-                            class="text-gray-600 hover:text-primary px-3 py-2 text-base font-medium transition-colors">Home</a>
+                            class="text-gray-900 hover:text-primary px-3 py-2 text-base font-medium transition-colors">Home</a>
                         <a href="stock.html"
                             class="text-gray-600 hover:text-primary px-3 py-2 text-base font-medium transition-colors">Stock</a>
-                        <a href="how-to-buy.html"
-                            class="text-gray-600 hover:text-primary px-3 py-2 text-base font-medium transition-colors">How
-                            to buy</a>
+
+                        <!-- How to Buy Dropdown -->
+                        <div class="relative group">
+                            <button
+                                class="text-gray-600 hover:text-primary px-3 py-2 text-base font-medium transition-colors flex items-center">
+                                How to buy
+                                <svg class="ml-1 h-4 w-4 transform group-hover:rotate-180 transition-transform duration-200"
+                                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </button>
+
+                            <!-- Dropdown Menu -->
+                            <div
+                                class="absolute left-0 mt-2 w-64 bg-white border border-gray-200 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                                <div class="py-1">
+                                    <a href="From-Us.html"
+                                        class="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors">
+                                        <div class="font-medium">How to buy from us</div>
+                                        <div class="text-xs text-gray-500 mt-1">Direct purchase from our stock</div>
+                                    </a>
+                                    <a href="auction-guide.html"
+                                        class="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors border-t border-gray-100">
+                                        <div class="font-medium">How to buy from auction</div>
+                                        <div class="text-xs text-gray-500 mt-1">Bid on live auction vehicles</div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
                         <a href="about.html"
-                            class="text-gray-900 hover:text-primary px-3 py-2 text-base font-medium transition-colors">About
+                            class="text-gray-600 hover:text-primary px-3 py-2 text-base font-medium transition-colors">About
                             Us</a>
                         <a href="contact.html"
                             class="text-gray-600 hover:text-primary px-3 py-2 text-base font-medium transition-colors">Contact
                             Us</a>
+                        <button onclick="window.location.href='register.html'"
+                            class="bg-white text-primary border-2 px-6 py-2 rounded-md text-base font-medium hover:text-white hover:bg-secondary transition-colors">
+                            Register Here
+                        </button>
                         <button onclick="window.location.href='login.html'"
                             class="bg-primary text-white px-6 py-2 rounded-md text-base font-medium hover:bg-secondary transition-colors">
-                            Portal Login
+                            Login
                         </button>
                     </div>
                 </div>

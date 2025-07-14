@@ -58,31 +58,55 @@
                     </div>
 
                     <!-- Navigation Links -->
-                    <div class="hidden lg:block">
-                        <div class="ml-10 flex items-center space-x-8">
-                            <a href="index.html"
-                                class="text-gray-600 hover:text-primary px-3 py-2 text-base font-medium transition-colors">Home</a>
-                            <a href="stock.html"
-                                class="text-gray-600 hover:text-primary px-3 py-2 text-base font-medium transition-colors">Stock</a>
-                            <a href="how-to-buy.html"
-                                class="text-gray-600 hover:text-primary px-3 py-2 text-base font-medium transition-colors">How
-                                to buy</a>
-                            <a href="about.html"
-                                class="text-gray-900 hover:text-primary px-3 py-2 text-base font-medium transition-colors">About
-                                Us</a>
-                            <a href="contact.html"
-                                class="text-gray-600 hover:text-primary px-3 py-2 text-base font-medium transition-colors">Contact
-                                Us</a>
-                            <button onclick="window.location.href='register.html'"
-                                class="bg-white text-primary border-2 px-6 py-2 rounded-md text-base font-medium hover:text-white   hover:bg-secondary transition-colors">
-                                Register Here
-                            </button>
-                            <button onclick="window.location.href='login.html'"
-                                class="bg-primary text-white px-6 py-2 rounded-md text-base font-medium hover:bg-secondary transition-colors">
-                                Login
-                            </button>
-                        </div>
-                    </div>
+                   <div class="hidden lg:block">
+    <div class="ml-10 flex items-center space-x-8">
+        <a href="index.html"
+            class="text-gray-900 hover:text-primary px-3 py-2 text-base font-medium transition-colors">Home</a>
+        <a href="stock.html"
+            class="text-gray-600 hover:text-primary px-3 py-2 text-base font-medium transition-colors">Stock</a>
+        
+        <!-- How to Buy Dropdown -->
+        <div class="relative group">
+            <button class="text-gray-600 hover:text-primary px-3 py-2 text-base font-medium transition-colors flex items-center">
+                How to buy
+                <svg class="ml-1 h-4 w-4 transform group-hover:rotate-180 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+            </button>
+            
+            <!-- Dropdown Menu -->
+            <div class="absolute left-0 mt-2 w-64 bg-white border border-gray-200 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                <div class="py-1">
+                    <a href="From-Us.html"
+                                        class="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors">
+                                        <div class="font-medium">How to buy from us</div>
+                                        <div class="text-xs text-gray-500 mt-1">Direct purchase from our stock</div>
+                                    </a>
+                                    <a href="auction-guide.html"
+                                        class="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors border-t border-gray-100">
+                                        <div class="font-medium">How to buy from auction</div>
+                                        <div class="text-xs text-gray-500 mt-1">Bid on live auction vehicles</div>
+                                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <a href="about.html"
+            class="text-gray-600 hover:text-primary px-3 py-2 text-base font-medium transition-colors">About
+            Us</a>
+        <a href="contact.html"
+            class="text-gray-600 hover:text-primary px-3 py-2 text-base font-medium transition-colors">Contact
+            Us</a>
+        <button onclick="window.location.href='register.html'"
+            class="bg-white text-primary border-2 px-6 py-2 rounded-md text-base font-medium hover:text-white hover:bg-secondary transition-colors">
+            Register Here
+        </button>
+        <button onclick="window.location.href='login.html'"
+            class="bg-primary text-white px-6 py-2 rounded-md text-base font-medium hover:bg-secondary transition-colors">
+            Login
+        </button>
+    </div>
+</div>
 
                     <!-- Mobile menu button -->
                     <div class="lg:hidden">
@@ -104,8 +128,30 @@
                         class="text-gray-900 block px-3 py-2 text-base font-medium border-l-4 border-primary">Home</a>
                     <a href="stock.html"
                         class="text-gray-600 hover:text-primary block px-3 py-2 text-base font-medium">Stock</a>
-                    <a href="how-to-buy.html"
-                        class="text-gray-600 hover:text-primary block px-3 py-2 text-base font-medium">How to buy</a>
+                    <div class="relative group">
+            <button class="text-gray-600 hover:text-primary px-3 py-2 text-base font-medium transition-colors flex items-center">
+                How to buy
+                <svg class="ml-1 h-4 w-4 transform group-hover:rotate-180 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+            </button>
+            
+            <!-- Dropdown Menu -->
+            <div class="absolute left-0 mt-2 w-64 bg-white border border-gray-200 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                <div class="py-1">
+                    <a href="From-Us.html"
+                                        class="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors">
+                                        <div class="font-medium">How to buy from us</div>
+                                        <div class="text-xs text-gray-500 mt-1">Direct purchase from our stock</div>
+                                    </a>
+                                    <a href="auction-guide.html"
+                                        class="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors border-t border-gray-100">
+                                        <div class="font-medium">How to buy from auction</div>
+                                        <div class="text-xs text-gray-500 mt-1">Bid on live auction vehicles</div>
+                                    </a>
+                </div>
+            </div>
+        </div>
                     <a href="about.html"
                         class="text-gray-600 hover:text-primary block px-3 py-2 text-base font-medium">About Us</a>
                     <a href="contact.html"
@@ -305,74 +351,89 @@
         <div class="absolute inset-0 bg-gray-900/70"></div>
 
         <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <h2 class="text-4xl font-bold text-white mb-6">
-                    We Ship to <span class="text-primary">Eight</span> Countries Worldwide
-                </h2>
-                <p class="text-xl text-white max-w-4xl mx-auto leading-relaxed">
-                    We offer seamless vehicle export services to Japan, Korea, Singapore, Thailand,
-                    China, UAE, UK, and more.
-                </p>
-            </div>
+    <div class="text-center mb-16">
+        <h2 class="text-4xl font-bold text-white mb-6">
+            We Export to <span class="text-primary">Nine</span> Countries Worldwide
+        </h2>
+        <p class="text-xl text-white max-w-4xl mx-auto leading-relaxed">
+            We offer seamless vehicle export services to England, Ghana, Ireland, Iraq, Chile, UAE, Afghanistan, Pakistan, and Thailand.
+        </p>
+    </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
-                <!-- United Kingdom -->
-                <div
-                    class="bg-white/95 backdrop-blur-sm rounded-full py-3 px-6 flex items-center space-x-3 hover:bg-white transition-colors">
-                    <div class="w-8 h-6 rounded bg-cover bg-center"
-                        style="background-image: url('https://flagcdn.com/w40/gb.jpg');"></div>
-                    <span class="font-semibold text-gray-900">United Kingdom (UK)</span>
-                </div>
-
-                <!-- Thailand -->
-                <div
-                    class="bg-white/95 backdrop-blur-sm rounded-full py-3 px-6 flex items-center space-x-3 hover:bg-white transition-colors">
-                    <div class="w-8 h-6 rounded bg-cover bg-center"
-                        style="background-image: url('https://flagcdn.com/w40/th.jpg');"></div>
-                    <span class="font-semibold text-gray-900">Thailand</span>
-                </div>
-
-                <!-- Japan -->
-                <div
-                    class="bg-white/95 backdrop-blur-sm rounded-full py-3 px-6 flex items-center space-x-3 hover:bg-white transition-colors">
-                    <div class="w-8 h-6 rounded bg-cover bg-center"
-                        style="background-image: url('https://flagcdn.com/w40/jp.jpg');"></div>
-                    <span class="font-semibold text-gray-900">Japan</span>
-                </div>
-
-                <!-- China -->
-                <div
-                    class="bg-white/95 backdrop-blur-sm rounded-full py-3 px-6 flex items-center space-x-3 hover:bg-white transition-colors">
-                    <div class="w-8 h-6 rounded bg-cover bg-center"
-                        style="background-image: url('https://flagcdn.com/w40/cn.jpg');"></div>
-                    <span class="font-semibold text-gray-900">China</span>
-                </div>
-
-                <!-- Singapore -->
-                <div
-                    class="bg-white/95 backdrop-blur-sm rounded-full py-3 px-6 flex items-center space-x-3 hover:bg-white transition-colors">
-                    <div class="w-8 h-6 rounded bg-cover bg-center"
-                        style="background-image: url('https://flagcdn.com/w40/sg.jpg');"></div>
-                    <span class="font-semibold text-gray-900">Singapore</span>
-                </div>
-
-                <!-- Korea -->
-                <div
-                    class="bg-white/95 backdrop-blur-sm rounded-full py-3 px-6 flex items-center space-x-3 hover:bg-white transition-colors">
-                    <div class="w-8 h-6 rounded bg-cover bg-center"
-                        style="background-image: url('https://flagcdn.com/w40/kr.jpg');"></div>
-                    <span class="font-semibold text-gray-900">Korea</span>
-                </div>
-
-                <!-- United Arab Emirates -->
-                <div
-                    class="bg-white/95 backdrop-blur-sm rounded-full py-3 px-6 flex items-center space-x-3 hover:bg-white transition-colors md:col-span-2 lg:col-span-1 lg:col-start-2">
-                    <div class="w-8 h-6 rounded bg-cover bg-center"
-                        style="background-image: url('https://flagcdn.com/w40/ae.jpg');"></div>
-                    <span class="font-semibold text-gray-900">United Arab Emirates (UAE)</span>
-                </div>
-            </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
+        <!-- England -->
+        <div
+            class="bg-white/95 backdrop-blur-sm rounded-full py-3 px-6 flex items-center space-x-3 hover:bg-white transition-colors">
+            <div class="w-8 h-6 rounded bg-cover bg-center"
+                style="background-image: url('https://flagcdn.com/w40/gb.jpg');"></div>
+            <span class="font-semibold text-gray-900">England</span>
         </div>
+
+        <!-- Ghana -->
+        <div
+            class="bg-white/95 backdrop-blur-sm rounded-full py-3 px-6 flex items-center space-x-3 hover:bg-white transition-colors">
+            <div class="w-8 h-6 rounded bg-cover bg-center"
+                style="background-image: url('https://flagcdn.com/w40/gh.jpg');"></div>
+            <span class="font-semibold text-gray-900">Ghana</span>
+        </div>
+
+        <!-- Ireland -->
+        <div
+            class="bg-white/95 backdrop-blur-sm rounded-full py-3 px-6 flex items-center space-x-3 hover:bg-white transition-colors">
+            <div class="w-8 h-6 rounded bg-cover bg-center"
+                style="background-image: url('https://flagcdn.com/w40/ie.jpg');"></div>
+            <span class="font-semibold text-gray-900">Ireland</span>
+        </div>
+
+        <!-- Iraq -->
+        <div
+            class="bg-white/95 backdrop-blur-sm rounded-full py-3 px-6 flex items-center space-x-3 hover:bg-white transition-colors">
+            <div class="w-8 h-6 rounded bg-cover bg-center"
+                style="background-image: url('https://flagcdn.com/w40/iq.jpg');"></div>
+            <span class="font-semibold text-gray-900">Iraq</span>
+        </div>
+
+        <!-- Chile -->
+        <div
+            class="bg-white/95 backdrop-blur-sm rounded-full py-3 px-6 flex items-center space-x-3 hover:bg-white transition-colors">
+            <div class="w-8 h-6 rounded bg-cover bg-center"
+                style="background-image: url('https://flagcdn.com/w40/cl.jpg');"></div>
+            <span class="font-semibold text-gray-900">Chile</span>
+        </div>
+
+        <!-- United Arab Emirates -->
+        <div
+            class="bg-white/95 backdrop-blur-sm rounded-full py-3 px-6 flex items-center space-x-3 hover:bg-white transition-colors">
+            <div class="w-8 h-6 rounded bg-cover bg-center"
+                style="background-image: url('https://flagcdn.com/w40/ae.jpg');"></div>
+            <span class="font-semibold text-gray-900">United Arab Emirates (UAE)</span>
+        </div>
+
+        <!-- Afghanistan -->
+        <div
+            class="bg-white/95 backdrop-blur-sm rounded-full py-3 px-6 flex items-center space-x-3 hover:bg-white transition-colors">
+            <div class="w-8 h-6 rounded bg-cover bg-center"
+                style="background-image: url('https://flagcdn.com/w40/af.jpg');"></div>
+            <span class="font-semibold text-gray-900">Afghanistan</span>
+        </div>
+
+        <!-- Pakistan -->
+        <div
+            class="bg-white/95 backdrop-blur-sm rounded-full py-3 px-6 flex items-center space-x-3 hover:bg-white transition-colors">
+            <div class="w-8 h-6 rounded bg-cover bg-center"
+                style="background-image: url('https://flagcdn.com/w40/pk.jpg');"></div>
+            <span class="font-semibold text-gray-900">Pakistan</span>
+        </div>
+
+        <!-- Thailand -->
+        <div
+            class="bg-white/95 backdrop-blur-sm rounded-full py-3 px-6 flex items-center space-x-3 hover:bg-white transition-colors">
+            <div class="w-8 h-6 rounded bg-cover bg-center"
+                style="background-image: url('https://flagcdn.com/w40/th.jpg');"></div>
+            <span class="font-semibold text-gray-900">Thailand</span>
+        </div>
+    </div>
+</div>
     </section>
 
     <!-- Why Choose Section -->
