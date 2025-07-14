@@ -42,9 +42,9 @@ async function checkAuthStatus() {
             console.log(`User found: ${currentUser.username || currentUser.name}, Role: ${userRole}`); // Debug log
             await loadData();
 
-            // Redirect only if on index.html
-            if (currentPage === 'index.html' || currentPage === '') {
-                console.log('On index.html, redirecting based on role'); // Debug log
+            // Redirect only if on index.html or login pages
+            if (currentPage === 'index.html' || currentPage === '' || currentPage === 'login.html') {
+                console.log('On login page, redirecting based on role'); // Debug log
                 if (userRole === 'admin') {
                     console.log('Redirecting to admin.html'); // Debug log
                     window.location.href = 'admin.html';
@@ -63,8 +63,9 @@ async function checkAuthStatus() {
         }
     } else {
         console.log('No user found, showing login panel'); // Debug log
-        // If no user is logged in and not on index.html, redirect to index.html
-        if (currentPage !== 'index.html' && currentPage !== '') {
+        // Allow access to login-related pages without redirect
+        const allowedPages = ['index.html', 'login.html', 'register.html', ''];
+        if (!allowedPages.includes(currentPage)) {
             console.log('Redirecting to index.html'); // Debug log
             window.location.href = 'index.html';
         } else {
