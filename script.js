@@ -367,6 +367,7 @@ async function handleAllocateCar(e) {
                 arrival_date: document.getElementById('shipping-arrival-date').value || null,
                 consignee: customer.name,
                 consignee_address: customer.address,
+                consignee_tel: customer.phone,
                 notify_address: document.getElementById('shipping-notify-address').value || 'Same as Consignee'
             };
             if (!shippingData.departure_date || !shippingData.arrival_date) {
