@@ -922,7 +922,6 @@ async function loadCustomers() {
                     
                     <div class="flex justify-between items-center">
                         <div class="text-xs text-gray-500">
-                            Joined: ${new Date(customer.created_at).toLocaleDateString()}
                         </div>
                         <button onclick="deleteCustomer(${customer.id})" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
                             Delete
