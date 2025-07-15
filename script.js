@@ -349,16 +349,24 @@ async function handleAddCar(e) {
 // Handle allocating a car to a customer
 async function handleAllocateCar(e) {
     e.preventDefault();
-    console.log('Handling allocate car'); // Debug log
+    console.log('Handling allocate car');
     const carId = document.getElementById('allocate-car-id').value;
     const customerId = document.getElementById('allocate-customer-id').value;
+    const purchaseDate = document.getElementById('purchase-date-input').value; // GET MANUAL DATE
     const car = cars.find(c => c.id === parseInt(carId));
     const customer = customers.find(c => c.id === parseInt(customerId));
+    
     if (!car || !customer) {
         showNotification('Invalid car or customer selection!', 'error');
         return;
     }
-    if (confirm(`Allocate ${car.make} ${car.model} to ${customer.name} for $${car.price.toLocaleString()}?`)) {
+    
+    if (!purchaseDate) {
+        showNotification('Please select a purchase date!', 'error');
+        return;
+    }
+    
+    if (confirm(`Allocate ${car.make} ${car.model} to ${customer.name} for JP¥${car.price.toLocaleString()}?\nPurchase Date: ${purchaseDate}`)) {
         try {
             const shippingData = {
                 from_port: document.getElementById('shipping-from-port').value || null,
@@ -370,20 +378,24 @@ async function handleAllocateCar(e) {
                 consignee_tel: customer.phone,
                 notify_address: document.getElementById('shipping-notify-address').value || 'Same as Consignee'
             };
+            
             console.log('Shipping Data:', shippingData);
-console.log('Customer Phone:', customer.phone);
+            console.log('Customer Phone:', customer.phone);
+            
             if (!shippingData.departure_date || !shippingData.arrival_date) {
                 showNotification('Departure Date and Arrival Date are required!', 'error');
                 return;
             }
+            
             const purchaseData = {
                 customer_id: parseInt(customerId),
                 car_id: parseInt(carId),
-                purchase_date: new Date().toISOString().split('T')[0],
+                purchase_date: purchaseDate, // USE MANUAL DATE INSTEAD OF AUTO DATE
                 purchase_price: car.price,
                 status: 'completed',
                 shipping_info: shippingData
             };
+            
             const { data: purchaseInsert, error: purchaseError } = await supabase
                 .from('purchases')
                 .insert([purchaseData])
@@ -392,6 +404,7 @@ console.log('Customer Phone:', customer.phone);
                 console.error('Purchase insert error:', purchaseError);
                 throw purchaseError;
             }
+            
             const { error: carUpdateError } = await supabase
                 .from('cars')
                 .update({ status: 'sold' })
@@ -400,6 +413,7 @@ console.log('Customer Phone:', customer.phone);
                 console.error('Car update error:', carUpdateError);
                 throw carUpdateError;
             }
+            
             cars = (await supabase.from('cars').select('*')).data;
             purchases = (await supabase.from('purchases').select('*')).data;
             showNotification('Car allocated successfully!', 'success');
@@ -1293,6 +1307,8 @@ async function showAllocateModal(carId) {
         showNotification('Car not found!', 'error');
         return;
     }
+    const today = new Date().toISOString().split('T')[0];
+document.getElementById('purchase-date-input').value = today;
     const allocateModal = document.getElementById('allocate-modal');
     if (!allocateModal) return;
     document.getElementById('allocate-car-id').value = carId;
