@@ -287,7 +287,9 @@ function loadCarData(car, purchase) {
     document.getElementById('arrival-date').textContent = shippingInfo.arrival_date ? new Date(shippingInfo.arrival_date).toLocaleDateString() : 'N/A';
     document.getElementById('consignee').textContent = shippingInfo.consignee || 'N/A';
     document.getElementById('consignee-address').textContent = shippingInfo.consignee_address || 'N/A';
-    document.getElementById('consignee-tel').textContent = shippingInfo.consignee_tel || 'N/A';
+     const phoneNumber = shippingInfo.consignee_tel || 'N/A';
+    console.log('Setting phone number to:', phoneNumber);
+    document.getElementById('consignee-tel').textContent = phoneNumber;
     document.getElementById('notify-address').textContent = shippingInfo.notify_address || 'SAME AS CONSIGNEE';
     document.getElementById('full-notify-address').textContent = shippingInfo.notify_address || 'Same as consignee address';
     document.getElementById('notify-tel').textContent = 'Same as consignee';

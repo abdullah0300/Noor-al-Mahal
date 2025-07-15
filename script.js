@@ -370,6 +370,8 @@ async function handleAllocateCar(e) {
                 consignee_tel: customer.phone,
                 notify_address: document.getElementById('shipping-notify-address').value || 'Same as Consignee'
             };
+            console.log('Shipping Data:', shippingData);
+console.log('Customer Phone:', customer.phone);
             if (!shippingData.departure_date || !shippingData.arrival_date) {
                 showNotification('Departure Date and Arrival Date are required!', 'error');
                 return;
