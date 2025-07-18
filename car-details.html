@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/imagekit-javascript/dist/imagekit.min.js"></script>
     <title>Car Details</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
@@ -21,18 +23,72 @@
     </script>
     <style>
         @media print {
-            body * { visibility: hidden; }
-            .print-area, .print-area * { visibility: visible; }
-            .no-print { display: none !important; }
-            .print-area { position: absolute; left: 0; top: 0; width: 100%; }
+            body * {
+                visibility: hidden;
+            }
+
+            .print-area,
+            .print-area * {
+                visibility: visible;
+            }
+
+            .no-print {
+                display: none !important;
+            }
+
+            .print-area {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+            }
         }
-        .thumbnail { width: 100px; height: 70px; object-fit: cover; border-radius: 8px; cursor: pointer; border: 2px solid transparent; transition: all 0.3s; }
-        .thumbnail:hover { border-color: #dc2626; transform: scale(1.05); }
-        .thumbnail.active { border-color: #dc2626; }
-        .detail-table { border-collapse: collapse; width: 100%; }
-        .detail-table th, .detail-table td { border: 1px solid #e5e7eb; padding: 8px 12px; text-align: left; }
-        .detail-table th { background-color: #fee2e2; font-weight: 600; color: #7f1d1d; }
-        .section-header { background: linear-gradient(135deg, #7f1d1d, #991b1b); color: white; padding: 12px; font-weight: bold; text-align: center; border-radius: 8px 8px 0 0; }
+
+        .thumbnail {
+            width: 100px;
+            height: 70px;
+            object-fit: cover;
+            border-radius: 8px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .thumbnail:hover {
+            border-color: #dc2626;
+            transform: scale(1.05);
+        }
+
+        .thumbnail.active {
+            border-color: #dc2626;
+        }
+
+        .detail-table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        .detail-table th,
+        .detail-table td {
+            border: 1px solid #e5e7eb;
+            padding: 8px 12px;
+            text-align: left;
+        }
+
+        .detail-table th {
+            background-color: #fee2e2;
+            font-weight: 600;
+            color: #7f1d1d;
+        }
+
+        .section-header {
+            background: linear-gradient(135deg, #7f1d1d, #991b1b);
+            color: white;
+            padding: 12px;
+            font-weight: bold;
+            text-align: center;
+            border-radius: 8px 8px 0 0;
+        }
     </style>
 </head>
 
@@ -41,12 +97,13 @@
     <div class="bg-gradient-to-r from-primary to-secondary text-white py-4 no-print">
         <div class="max-w-7xl mx-auto px-4 flex justify-between items-center">
             <div class="flex items-center space-x-4">
-                <button onclick="goBack()" class="bg-white bg-opacity-20 hover:bg-opacity-30 px-4 py-2 rounded-lg font-medium transition-colors">
+                <button onclick="goBack()"
+                    class="bg-white bg-opacity-20 hover:bg-opacity-30 px-4 py-2 rounded-lg font-medium transition-colors">
                     ← Back to Dashboard
                 </button>
                 <h1 class="text-2xl font-bold">Vehicle Details</h1>
             </div>
-            
+
         </div>
     </div>
 
@@ -65,7 +122,7 @@
                     <div class="border-2 border-gray-200 rounded-lg overflow-hidden">
                         <img id="main-image" src="" alt="Car Main Image" class="w-full h-80 object-cover">
                     </div>
-                    
+
                     <!-- Thumbnail Gallery -->
                     <div class="grid grid-cols-6 gap-2 h-24" id="thumbnail-gallery">
                         <!-- Thumbnails will be populated here -->
@@ -76,7 +133,8 @@
                 <div class="w-3/5 flex flex-col gap-3">
                     <!-- Payment Section -->
                     <div class="bg-white border border-gray-200 rounded-lg overflow-hidden">
-                        <div style="background-color: green;" class=" text-white px-4 py-2 text-sm font-bold uppercase">Payment</div>
+                        <div style="background-color: green;" class=" text-white px-4 py-2 text-sm font-bold uppercase">
+                            Payment</div>
                         <table class="w-full text-sm">
                             <thead>
                                 <tr class="bg-gray-50 ">
@@ -97,7 +155,8 @@
 
                     <!-- Shipping Information -->
                     <div class="bg-white border border-gray-200 rounded-lg overflow-hidden">
-                        <div style="background-color: grey;" class=" text-white px-4 py-2 text-sm font-bold uppercase">Shipping Information</div>
+                        <div style="background-color: grey;" class=" text-white px-4 py-2 text-sm font-bold uppercase">
+                            Shipping Information</div>
                         <table class="w-full text-sm">
                             <tbody>
                                 <tr class="border-b">
@@ -140,7 +199,8 @@
 
                     <!-- Car Specifications -->
                     <div class="bg-white border border-gray-200 rounded-lg overflow-hidden">
-                        <div style="background-color: grey;" class="bg-red-800 text-white px-4 py-2 text-sm font-bold uppercase">Car Specs</div>
+                        <div style="background-color: grey;"
+                            class="bg-red-800 text-white px-4 py-2 text-sm font-bold uppercase">Car Specs</div>
                         <table class="w-full text-sm">
                             <tbody>
                                 <tr class="border-b">
@@ -170,11 +230,11 @@
                                     <td class="p-2" id="doors"></td>
                                 </tr>
                                 <tr class="border-b">
-                                   
+
                                     <td class="p-2 font-medium">Engine CC</td>
                                     <td class="p-2" id="engine-cc"></td>
                                 </tr>
-                                
+
                                 <tr>
                                     <td class="p-2 font-medium">Registration Year</td>
                                     <td class="p-2" id="reg-year"></td>
@@ -183,12 +243,14 @@
                                 </tr>
                             </tbody>
                         </table>
-                        
+
                     </div>
 
                     <!-- Additional Details Section -->
-                    <div  class="bg-white border border-gray-200 rounded-lg overflow-hidden" id="additional-details-section" style="display: none;">
-                        <div class="bg-red-800 text-white px-4 py-2 text-sm font-bold uppercase">Additional Details</div>
+                    <div class="bg-white border border-gray-200 rounded-lg overflow-hidden"
+                        id="additional-details-section" style="display: none;">
+                        <div class="bg-red-800 text-white px-4 py-2 text-sm font-bold uppercase">Additional Details
+                        </div>
                         <div class="p-3">
                             <p id="additional-details-content" class="text-gray-700 whitespace-pre-wrap text-sm"></p>
                         </div>
@@ -196,9 +258,10 @@
 
                     <!-- Options Section -->
                     <div class="bg-white border border-gray-200 rounded-lg overflow-hidden">
-                        <div style="background-color: grey;" class="bg-red-800 text-white px-4 py-2 text-sm font-bold uppercase">Options</div>
+                        <div style="background-color: grey;"
+                            class="bg-red-800 text-white px-4 py-2 text-sm font-bold uppercase">Options</div>
                         <div class="p-3 space-y-2 text-sm">
-                            
+
                             <div class="border-t pt-2 mt-3">
                                 <div class="flex justify-between">
                                     <span class="font-medium">Purchase Date:</span>
@@ -221,153 +284,154 @@
     </div>
 
     <script>
-// Supabase Configuration (same as your main app)
-const SUPABASE_URL = 'https://ixzgedpzhbzfomttiadg.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml4emdlZHB6aGJ6Zm9tdHRpYWRnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE4Nzg5MjIsImV4cCI6MjA2NzQ1NDkyMn0.laobv0954I3xlGijKj8dl8UILh5V3hqSoYDo1NiVlpw';
+        // Supabase Configuration (same as your main app)
+        const SUPABASE_URL = 'https://ixzgedpzhbzfomttiadg.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml4emdlZHB6aGJ6Zm9tdHRpYWRnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE4Nzg5MjIsImV4cCI6MjA2NzQ1NDkyMn0.laobv0954I3xlGijKj8dl8UILh5V3hqSoYDo1NiVlpw';
 
-let supabase;
+        let supabase;
 
-// Initialize Supabase
-function initSupabase() {
-    if (window.supabase) {
-        supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    } else {
-        console.error('Supabase client is not loaded');
-    }
-}
-
-// Initialize page with data from URL parameters
-async function initializePage() {
-    initSupabase();
-    
-    // Get car and purchase IDs from URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const carId = urlParams.get('carId');
-    const purchaseId = urlParams.get('purchaseId');
-    
-    if (carId && purchaseId) {
-        try {
-            // Fetch car and purchase data from database
-            const [carResult, purchaseResult] = await Promise.all([
-                supabase.from('cars').select('*').eq('id', carId).single(),
-                supabase.from('purchases').select('*').eq('id', purchaseId).single()
-            ]);
-            
-            if (carResult.data && purchaseResult.data) {
-                loadCarData(carResult.data, purchaseResult.data);
-                setupImageGallery(carResult.data);
+        // Initialize Supabase
+        function initSupabase() {
+            if (window.supabase) {
+                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
             } else {
-                console.error('Car or purchase not found');
+                console.error('Supabase client is not loaded');
+            }
+        }
+
+        // Initialize page with data from URL parameters
+        async function initializePage() {
+            initSupabase();
+
+            // Get car and purchase IDs from URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const carId = urlParams.get('carId');
+            const purchaseId = urlParams.get('purchaseId');
+
+            if (carId && purchaseId) {
+                try {
+                    // Fetch car and purchase data from database
+                    const [carResult, purchaseResult] = await Promise.all([
+                        supabase.from('cars').select('*').eq('id', carId).single(),
+                        supabase.from('purchases').select('*').eq('id', purchaseId).single()
+                    ]);
+
+                    if (carResult.data && purchaseResult.data) {
+                        loadCarData(carResult.data, purchaseResult.data);
+                        setupImageGallery(carResult.data);
+                    } else {
+                        console.error('Car or purchase not found');
+                        goBack();
+                    }
+                } catch (error) {
+                    console.error('Error fetching data:', error);
+                    goBack();
+                }
+            } else {
+                console.error('No car or purchase ID provided');
                 goBack();
             }
-        } catch (error) {
-            console.error('Error fetching data:', error);
-            goBack();
         }
-    } else {
-        console.error('No car or purchase ID provided');
-        goBack();
-    }
-}
 
-function loadCarData(car, purchase) {
-    const shippingInfo = purchase.shipping_info || {};
-    
-    // Update car title
-    document.getElementById('car-title').textContent = `${car.year} ${car.make} ${car.model}`;
-    
-    // Update payment info
-    document.getElementById('vehicle-price').textContent = `JP¥ ${car.price.toLocaleString()}`;
-    document.getElementById('paid-amount').textContent = `JP¥ ${car.price.toLocaleString()}`;
-    
-    // Update shipping info
-    document.getElementById('from-port').textContent = shippingInfo.from_port || 'N/A';
-    document.getElementById('arrival-port').textContent = shippingInfo.arrival_port || 'N/A';
-    document.getElementById('departure-date').textContent = shippingInfo.departure_date ? new Date(shippingInfo.departure_date).toLocaleDateString() : 'N/A';
-    document.getElementById('arrival-date').textContent = shippingInfo.arrival_date ? new Date(shippingInfo.arrival_date).toLocaleDateString() : 'N/A';
-    document.getElementById('consignee').textContent = shippingInfo.consignee || 'N/A';
-    document.getElementById('consignee-address').textContent = shippingInfo.consignee_address || 'N/A';
-     const phoneNumber = shippingInfo.consignee_tel || 'N/A';
-    console.log('Setting phone number to:', phoneNumber);
-    document.getElementById('consignee-tel').textContent = phoneNumber;
-    document.getElementById('notify-address').textContent = shippingInfo.notify_address || 'SAME AS CONSIGNEE';
-    document.getElementById('full-notify-address').textContent = shippingInfo.notify_address || 'Same as consignee address';
-    document.getElementById('notify-tel').textContent = 'Same as consignee';
-    
-    // Update car specs
-    document.getElementById('rec-no').textContent = car.id;
-    document.getElementById('chassis').textContent = car.vin;
-    document.getElementById('mileage').textContent = car.mileage.toLocaleString();
-    document.getElementById('fuel').textContent = car.fuel_type;
-    document.getElementById('color').textContent = car.color;
-    document.getElementById('transmission').textContent = car.transmission;
-    document.getElementById('doors').textContent = car.doors;
-    document.getElementById('seats').textContent = car.seats;
-    document.getElementById('engine-cc').textContent = `${car.engine_cc.toLocaleString()} cc`;
-    document.getElementById('reg-year').textContent = car.registration_year;
-    document.getElementById('lecture-year').textContent = car.year;
-    
-    // Update options
-    document.getElementById('purchase-date').textContent = new Date(purchase.purchase_date).toLocaleDateString();
-    document.getElementById('order-id').textContent = `#${purchase.id}`;
-    document.getElementById('status').textContent = purchase.status.toUpperCase();
-    
-    // Show additional details if available
-    if (car.additional_details) {
-        document.getElementById('additional-details-section').style.display = 'block';
-        document.getElementById('additional-details-content').textContent = car.additional_details;
-    }
-}
+        function loadCarData(car, purchase) {
+            const shippingInfo = purchase.shipping_info || {};
 
-function setupImageGallery(car) {
-    const mainImage = document.getElementById('main-image');
-    const thumbnailGallery = document.getElementById('thumbnail-gallery');
-    const placeholderImage = 'https://placehold.co/600x400/dc2626/white?text=Your+Car';
-    
-    thumbnailGallery.innerHTML = ''; // Clear existing thumbnails
-    
-    if (car.images && car.images.length > 0) {
-        mainImage.src = car.images[0];
-        
-        car.images.forEach((image, index) => {
-            const thumbnail = document.createElement('img');
-            thumbnail.src = image || placeholderImage;
-            thumbnail.className = `thumbnail ${index === 0 ? 'active' : ''}`;
-            thumbnail.onclick = () => switchImage(image || placeholderImage, thumbnail);
-            thumbnailGallery.appendChild(thumbnail);
-        });
-    } else {
-        mainImage.src = placeholderImage;
-        const thumbnail = document.createElement('img');
-        thumbnail.src = placeholderImage;
-        thumbnail.className = 'thumbnail active';
-        thumbnailGallery.appendChild(thumbnail);
-    }
-}
+            // Update car title
+            document.getElementById('car-title').textContent = `${car.year} ${car.make} ${car.model}`;
 
-function switchImage(imageSrc, thumbnailElement) {
-    document.getElementById('main-image').src = imageSrc;
-    
-    // Update active thumbnail
-    document.querySelectorAll('.thumbnail').forEach(thumb => thumb.classList.remove('active'));
-    thumbnailElement.classList.add('active');
-}
+            // Update payment info
+            document.getElementById('vehicle-price').textContent = `JP¥ ${car.price.toLocaleString()}`;
+            document.getElementById('paid-amount').textContent = `JP¥ ${car.price.toLocaleString()}`;
 
-function downloadCarImage() {
-    const mainImage = document.getElementById('main-image');
-    const link = document.createElement('a');
-    link.href = mainImage.src;
-    link.download = `car_image.jpg`;
-    link.click();
-}
+            // Update shipping info
+            document.getElementById('from-port').textContent = shippingInfo.from_port || 'N/A';
+            document.getElementById('arrival-port').textContent = shippingInfo.arrival_port || 'N/A';
+            document.getElementById('departure-date').textContent = shippingInfo.departure_date ? new Date(shippingInfo.departure_date).toLocaleDateString() : 'N/A';
+            document.getElementById('arrival-date').textContent = shippingInfo.arrival_date ? new Date(shippingInfo.arrival_date).toLocaleDateString() : 'N/A';
+            document.getElementById('consignee').textContent = shippingInfo.consignee || 'N/A';
+            document.getElementById('consignee-address').textContent = shippingInfo.consignee_address || 'N/A';
+            const phoneNumber = shippingInfo.consignee_tel || 'N/A';
+            console.log('Setting phone number to:', phoneNumber);
+            document.getElementById('consignee-tel').textContent = phoneNumber;
+            document.getElementById('notify-address').textContent = shippingInfo.notify_address || 'SAME AS CONSIGNEE';
+            document.getElementById('full-notify-address').textContent = shippingInfo.notify_address || 'Same as consignee address';
+            document.getElementById('notify-tel').textContent = 'Same as consignee';
 
-function goBack() {
-    // Go back to customer dashboard
-    window.location.href = 'customer.html';
-}
+            // Update car specs
+            document.getElementById('rec-no').textContent = car.id;
+            document.getElementById('chassis').textContent = car.vin;
+            document.getElementById('mileage').textContent = car.mileage.toLocaleString();
+            document.getElementById('fuel').textContent = car.fuel_type;
+            document.getElementById('color').textContent = car.color;
+            document.getElementById('transmission').textContent = car.transmission;
+            document.getElementById('doors').textContent = car.doors;
+            document.getElementById('seats').textContent = car.seats;
+            document.getElementById('engine-cc').textContent = `${car.engine_cc.toLocaleString()} cc`;
+            document.getElementById('reg-year').textContent = car.registration_year;
+            document.getElementById('lecture-year').textContent = car.year;
 
-// Initialize when page loads
-document.addEventListener('DOMContentLoaded', initializePage);
-</script>
+            // Update options
+            document.getElementById('purchase-date').textContent = new Date(purchase.purchase_date).toLocaleDateString();
+            document.getElementById('order-id').textContent = `#${purchase.id}`;
+            document.getElementById('status').textContent = purchase.status.toUpperCase();
+
+            // Show additional details if available
+            if (car.additional_details) {
+                document.getElementById('additional-details-section').style.display = 'block';
+                document.getElementById('additional-details-content').textContent = car.additional_details;
+            }
+        }
+
+        function setupImageGallery(car) {
+            const mainImage = document.getElementById('main-image');
+            const thumbnailGallery = document.getElementById('thumbnail-gallery');
+            const placeholderImage = 'https://placehold.co/600x400/dc2626/white?text=Your+Car';
+
+            thumbnailGallery.innerHTML = ''; // Clear existing thumbnails
+
+            if (car.images && car.images.length > 0) {
+                mainImage.src = car.images[0];
+
+                car.images.forEach((image, index) => {
+                    const thumbnail = document.createElement('img');
+                    thumbnail.src = image || placeholderImage;
+                    thumbnail.className = `thumbnail ${index === 0 ? 'active' : ''}`;
+                    thumbnail.onclick = () => switchImage(image || placeholderImage, thumbnail);
+                    thumbnailGallery.appendChild(thumbnail);
+                });
+            } else {
+                mainImage.src = placeholderImage;
+                const thumbnail = document.createElement('img');
+                thumbnail.src = placeholderImage;
+                thumbnail.className = 'thumbnail active';
+                thumbnailGallery.appendChild(thumbnail);
+            }
+        }
+
+        function switchImage(imageSrc, thumbnailElement) {
+            document.getElementById('main-image').src = imageSrc;
+
+            // Update active thumbnail
+            document.querySelectorAll('.thumbnail').forEach(thumb => thumb.classList.remove('active'));
+            thumbnailElement.classList.add('active');
+        }
+
+        function downloadCarImage() {
+            const mainImage = document.getElementById('main-image');
+            const link = document.createElement('a');
+            link.href = mainImage.src;
+            link.download = `car_image.jpg`;
+            link.click();
+        }
+
+        function goBack() {
+            // Go back to customer dashboard
+            window.location.href = 'customer.html';
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', initializePage);
+    </script>
 </body>
+
 </html>

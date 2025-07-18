@@ -2,6 +2,29 @@
 const SUPABASE_URL = 'https://ixzgedpzhbzfomttiadg.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml4emdlZHB6aGJ6Zm9tdHRpYWRnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE4Nzg5MjIsImV4cCI6MjA2NzQ1NDkyMn0.laobv0954I3xlGijKj8dl8UILh5V3hqSoYDo1NiVlpw';
 
+
+// ImageKit Configuration
+const IMAGEKIT_URL_ENDPOINT = 'https://ik.imagekit.io/mctozv7td'; // Replace with your URL
+const IMAGEKIT_PUBLIC_KEY = 'public_pwour9XJRGdU2DuwZA2SBOtbu3g='; // Replace with your public key
+const IMAGEKIT_PRIVATE_KEY = 'private_PgJoYB/4F+bNBc3uBBDvNBB1tDg='; // Replace with your private key
+
+// Initialize ImageKit
+const imagekit = new ImageKit({
+    publicKey: IMAGEKIT_PUBLIC_KEY,
+    urlEndpoint: IMAGEKIT_URL_ENDPOINT,
+    authenticationEndpoint: null // We'll use client-side upload
+});
+
+// Helper function to get image URL from either old format (string) or new format (object)
+function getImageUrl(imageData) {
+    if (typeof imageData === 'string') {
+        return imageData; // Old format
+    } else if (imageData && imageData.url) {
+        return imageData.url; // New format
+    }
+    return 'https://placehold.co/300x200/dc2626/white?text=No+Image';
+}
+
 // Initialize global variables
 let supabase;
 let cars = [];
@@ -243,14 +266,84 @@ function showTab(tabName) {
     document.getElementById(tabName).classList.add('active');
 }
 
-// Convert file to Base64
-async function fileToBase64(file) {
+// NEW: Upload image to ImageKit
+// CORRECTED: Upload image to ImageKit using proper client-side method
+// ENHANCED: Upload image to ImageKit and store both URL and fileId
+async function uploadToImageKit(file, fileName) {
     return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = error => reject(error);
-        reader.readAsDataURL(file);
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('fileName', fileName);
+        formData.append('publicKey', IMAGEKIT_PUBLIC_KEY);
+        
+        fetch('https://upload.imagekit.io/api/v1/files/upload', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Basic ${btoa(IMAGEKIT_PRIVATE_KEY + ':')}`
+            },
+            body: formData
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.url) {
+                // Return both URL and fileId for deletion purposes
+                resolve({
+                    url: data.url,
+                    fileId: data.fileId
+                });
+            } else {
+                reject(new Error(data.message || 'Upload failed'));
+            }
+        })
+        .catch(error => {
+            console.error('ImageKit upload error:', error);
+            reject(error);
+        });
     });
+}
+
+// NEW: Delete image from ImageKit
+async function deleteFromImageKit(fileId) {
+    return new Promise((resolve, reject) => {
+        fetch(`https://api.imagekit.io/v1/files/${fileId}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Basic ${btoa(IMAGEKIT_PRIVATE_KEY + ':')}`
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                resolve(true);
+            } else {
+                reject(new Error(`Failed to delete image: ${response.status}`));
+            }
+        })
+        .catch(error => {
+            console.error('ImageKit delete error:', error);
+            reject(error);
+        });
+    });
+}
+
+// NEW: Delete multiple images from ImageKit
+async function deleteMultipleImagesFromImageKit(imageData) {
+    const deletePromises = imageData.map(async (imgData) => {
+        if (imgData.fileId) {
+            try {
+                await deleteFromImageKit(imgData.fileId);
+                console.log(`Deleted image: ${imgData.fileId}`);
+            } catch (error) {
+                console.error(`Failed to delete image ${imgData.fileId}:`, error);
+            }
+        }
+    });
+    
+    await Promise.all(deletePromises);
 }
 
 // Handle adding a car with Base64 images
@@ -304,24 +397,28 @@ async function handleAddCar(e) {
         return;
     }
     for (const file of files) {
-        if (!file.type.match(/image\/(png|jpeg)/)) {
-            showNotification(`File ${file.name} must be PNG or JPEG!`, 'error');
-            continue;
-        }
-        if (file.size > 1 * 1024 * 1024) { // Limit to 1MB
-            showNotification(`File ${file.name} is too large! Max size is 1MB.`, 'error');
-            continue;
-        }
-        try {
-            showNotification(`Processing ${file.name}...`, 'info');
-            const base64String = await fileToBase64(file);
-            carData.images.push(base64String);
-        } catch (error) {
-            console.error('Error converting file to Base64:', file.name, error);
-            showNotification(`Failed to process ${file.name}`, 'error');
-            return;
-        }
+    if (!file.type.match(/image\/(png|jpeg)/)) {
+        showNotification(`File ${file.name} must be PNG or JPEG!`, 'error');
+        continue;
     }
+    if (file.size > 5 * 1024 * 1024) { // Increased to 5MB since we're not storing in DB
+        showNotification(`File ${file.name} is too large! Max size is 5MB.`, 'error');
+        continue;
+    }
+    try {
+    showNotification(`Uploading ${file.name}...`, 'info');
+    const imageData = await uploadToImageKit(file, `car_${Date.now()}_${file.name}`);
+    carData.images.push({
+        url: imageData.url,
+        fileId: imageData.fileId,
+        filename: file.name
+    });
+} catch (error) {
+    console.error('Error uploading image:', file.name, error);
+    showNotification(`Failed to upload ${file.name}`, 'error');
+    return;
+}
+}
     if (carData.images.length === 0) {
         showNotification('No valid images processed. Cannot add car.', 'error');
         return;
@@ -478,26 +575,30 @@ async function handleEditCar(e) {
 
     const files = document.getElementById('edit-car-images').files;
     if (files.length > 0) {
-        for (const file of files) {
-            if (!file.type.match(/image\/(png|jpeg)/)) {
-                showNotification(`File ${file.name} must be PNG or JPEG!`, 'error');
-                continue;
-            }
-            if (file.size > 1 * 1024 * 1024) { // Limit to 1MB
-                showNotification(`File ${file.name} is too large! Max size is 1MB.`, 'error');
-                continue;
-            }
-            try {
-                showNotification(`Processing ${file.name}...`, 'info');
-                const base64String = await fileToBase64(file);
-                carData.images.push(base64String);
-            } catch (error) {
-                console.error('Error converting file to Base64:', file.name, error);
-                showNotification(`Failed to process ${file.name}`, 'error');
-                return;
-            }
+    for (const file of files) {
+        if (!file.type.match(/image\/(png|jpeg)/)) {
+            showNotification(`File ${file.name} must be PNG or JPEG!`, 'error');
+            continue;
         }
+        if (file.size > 5 * 1024 * 1024) {
+            showNotification(`File ${file.name} is too large! Max size is 5MB.`, 'error');
+            continue;
+        }
+        try {
+    showNotification(`Uploading ${file.name}...`, 'info');
+    const imageData = await uploadToImageKit(file, `car_edit_${Date.now()}_${file.name}`);
+    carData.images.push({
+        url: imageData.url,
+        fileId: imageData.fileId,
+        filename: file.name
+    });
+} catch (error) {
+    console.error('Error uploading image:', file.name, error);
+    showNotification(`Failed to upload ${file.name}`, 'error');
+    return;
+}
     }
+}
     try {
         const { error } = await supabase
             .from('cars')
@@ -545,8 +646,8 @@ function createCarCard(car, isAdmin, showEdit = false) {
     card.className = 'bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100';
     
     const placeholderImage = 'https://placehold.co/300x200/dc2626/white?text=No+Image';
-    const mainImage = car.images && car.images.length > 0 ? car.images[0] : placeholderImage;
-    
+const mainImage = car.images && car.images.length > 0 ? 
+    (typeof car.images[0] === 'string' ? car.images[0] : car.images[0].url) : placeholderImage;    
     const statusColors = {
         'available': 'bg-green-100 text-green-800 border-green-200',
         'sold': 'bg-red-100 text-red-800 border-red-200',
@@ -591,9 +692,10 @@ function createCarCard(car, isAdmin, showEdit = false) {
             
             ${car.images && car.images.length > 1 ? `
                 <div class="flex gap-2 mb-4 overflow-x-auto">
-                    ${car.images.slice(0, 4).map(img => `
-                        <img src="${img || placeholderImage}" alt="Car image" class="w-12 h-8 object-cover rounded border-2 border-transparent hover:border-red-500 cursor-pointer flex-shrink-0">
-                    `).join('')}
+                    ${car.images.slice(0, 4).map(img => {
+    const imgUrl = typeof img === 'string' ? img : img.url;
+    return `<img src="${imgUrl || placeholderImage}" alt="Car image" class="w-12 h-8 object-cover rounded border-2 border-transparent hover:border-red-500 cursor-pointer flex-shrink-0">`;
+}).join('')}
                     ${car.images.length > 4 ? `<div class="w-12 h-8 bg-gray-100 rounded flex items-center justify-center text-xs text-gray-500">+${car.images.length - 4}</div>` : ''}
                 </div>
             ` : ''}
@@ -633,8 +735,8 @@ function showCarDetails(carId) {
     const modal = document.getElementById('car-details-modal');
     const content = document.getElementById('car-details-content');
     const placeholderImage = 'https://placehold.co/400x300/dc2626/white?text=No+Image';
-    let activeImage = car.images && car.images.length > 0 ? car.images[0] : placeholderImage;
-    
+let activeImage = car.images && car.images.length > 0 ? 
+    (typeof car.images[0] === 'string' ? car.images[0] : car.images[0].url) : placeholderImage;     
     const statusColors = {
         'available': 'bg-green-100 text-green-800',
         'sold': 'bg-red-100 text-red-800',
@@ -807,17 +909,34 @@ function closeCarDetailsModal() {
 }
 
 // Delete a car
+// ENHANCED: Delete car with proper image cleanup
 async function deleteCar(carId) {
-    console.log(`Deleting car ID: ${carId}`); // Debug log
-    if (confirm('Are you sure you want to delete this car?')) {
+    console.log(`Deleting car ID: ${carId}`);
+    
+    if (confirm('Are you sure you want to delete this car? This will also delete all associated images.')) {
         try {
+            // First, get the car data to access images
+            const car = cars.find(c => c.id === carId);
+            
+            if (car && car.images && car.images.length > 0) {
+                showNotification('Deleting images from ImageKit...', 'info');
+                
+                // Delete images from ImageKit
+                await deleteMultipleImagesFromImageKit(car.images);
+            }
+            
+            // Then delete the car from database
             await supabase.from('cars').delete().eq('id', carId);
+            
+            // Update local data
             cars = (await supabase.from('cars').select('*')).data;
-            showNotification('Car deleted successfully!', 'success');
+            
+            showNotification('Car and all images deleted successfully!', 'success');
             loadCars();
+            
         } catch (error) {
             console.error('Error deleting car:', error);
-            showNotification('Failed to delete car!', 'error');
+            showNotification('Failed to delete car completely!', 'error');
         }
     }
 }
@@ -1046,6 +1165,22 @@ async function loadCustomerCars() {
     }
 }
 
+// HELPER: Get image URL from either old format (string) or new format (object)
+function getImageUrl(imageData) {
+    if (typeof imageData === 'string') {
+        return imageData; // Old format: just URL string
+    } else if (imageData && imageData.url) {
+        return imageData.url; // New format: object with url and fileId
+    }
+    return 'https://placehold.co/300x200/dc2626/white?text=No+Image'; // Fallback
+}
+
+// HELPER: Get all image URLs from car images array
+function getAllImageUrls(images) {
+    if (!images || !Array.isArray(images)) return [];
+    return images.map(img => getImageUrl(img));
+}
+
 // Create customer car card with Base64 images
 function createCustomerCarCard(car, purchase) {
     console.log(`Creating customer car card for ${car.make} ${car.model}`);
@@ -1056,8 +1191,8 @@ function createCustomerCarCard(car, purchase) {
     const arrivalDate = shippingInfo.arrival_date ? new Date(shippingInfo.arrival_date).toLocaleDateString() : 'N/A';
     const departureDate = shippingInfo.departure_date ? new Date(shippingInfo.departure_date).toLocaleDateString() : 'N/A';
     const placeholderImage = 'https://placehold.co/300x200/dc2626/white?text=Your+Car';
-    const mainImage = car.images && car.images.length > 0 ? car.images[0] : placeholderImage;
-    
+const mainImage = car.images && car.images.length > 0 ? 
+    (typeof car.images[0] === 'string' ? car.images[0] : car.images[0].url) : placeholderImage;    
     card.innerHTML = `
         <div class="relative">
             <img src="${mainImage}" alt="${car.make} ${car.model}" class="w-full h-48 object-cover">
@@ -1175,9 +1310,10 @@ function createCustomerCarCard(car, purchase) {
                 <div class="mt-4">
                     <h5 class="text-sm font-medium text-gray-700 mb-2">Gallery</h5>
                     <div class="flex gap-2 overflow-x-auto">
-                        ${car.images.slice(0, 4).map(img => `
-                            <img src="${img || placeholderImage}" alt="Car image" class="thumbnail border-2 border-gray-200 hover:border-red-500">
-                        `).join('')}
+                        ${car.images.slice(0, 4).map(img => {
+    const imgUrl = typeof img === 'string' ? img : img.url;
+    return `<img src="${imgUrl || placeholderImage}" alt="Car image" class="thumbnail">`;
+}).join('')}
                         ${car.images.length > 4 ? `<div class="w-12 h-8 bg-gray-100 rounded flex items-center justify-center text-xs text-gray-500 flex-shrink-0">+${car.images.length - 4}</div>` : ''}
                     </div>
                 </div>
@@ -1232,8 +1368,8 @@ async function loadPurchaseHistory() {
                 const arrivalDate = shippingInfo.arrival_date ? new Date(shippingInfo.arrival_date).toLocaleDateString() : 'N/A';
                 const departureDate = shippingInfo.departure_date ? new Date(shippingInfo.departure_date).toLocaleDateString() : 'N/A';
                 const placeholderImage = 'https://placehold.co/150x100/dc2626/white?text=Car';
-                const mainImage = car.images && car.images.length > 0 ? car.images[0] : placeholderImage;
-                
+const mainImage = car.images && car.images.length > 0 ? 
+    (typeof car.images[0] === 'string' ? car.images[0] : car.images[0].url) : placeholderImage;                
                 purchaseItem.innerHTML = `
                     <div class="flex flex-col md:flex-row">
                         <div class="md:w-48 h-48 md:h-auto">
